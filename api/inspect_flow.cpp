@@ -1,15 +1,79 @@
 ﻿#include "inspect_flow.h"
 #include "inspect_algorithm.h"
 #include "dbinspect.h"
+#include "qextserialport.h"
+#include "gpibctl.h"
 #include <QtGlobal>
 #include <cmath>
 #include <QDebug>
 
 
+static bool isComOk;
+static QextSerialPort *com;
+//static QTimer *timerRead;
+//static QTimer *timerData;
+
+static ViPSession pViSession;
+
+
+static void initData()
+{
+    /* 打开GPIB */
+    ViStatus status;
+    ViSession viSes;
+
+    status = AutoConnectGPIB(&viSes);
+    pViSession = &viSes;
+
+    /* 打开串口 */
+    isComOk = false;
+    // timerRead = new QTimer();
+    //timerRead->setInterval(100);
+    //connect(timerRead, SIGNAL(timeout()), this, SLOT(readDataCom()));
+
+    //timerData = new QTimer();
+    //timerData->setInterval(1000);
+    //connect(timerData, SIGNAL(timeout()), this, SLOT(loadData()));
+
+    com = new QextSerialPort("com1", QextSerialPort::Polling);
+    isComOk = com->open(QIODevice::ReadWrite);
+    if (isComOk) {
+        com->setBaudRate(BAUD115200);
+        com->setFlowControl(FLOW_OFF);
+        com->setTimeout(10);
+
+        //timerRead->start();
+        //timerData->start();
+    }
+}
+
+static void uninitData()
+{
+    /* 关闭串口 */
+    if(com)
+    {
+        com->close();
+        com->deleteLater();
+        isComOk = false;
+        delete com;
+        com = nullptr;
+    }
+    //timerData->stop();
+    //timerRead->stop();
+
+    /* 关闭GPIB */
+    if(pViSession)
+    {
+        CloseConnectGPIB(pViSession);
+        delete pViSession;
+        pViSession = nullptr;
+    }
+}
+
 /**
  * 设置标准源，set_type为直流电压，直流电流，交流电压，交流电流，电阻
  */
-void set_standard_source(int set_type, double set_val)
+static void set_standard_source(int set_type, double set_val)
 {
     set_type = set_type;
     set_val = set_val;
@@ -18,15 +82,15 @@ void set_standard_source(int set_type, double set_val)
 /**
  * 获取多用表输出值，set_type为直流电压，直流电流，交流电压，交流电流，电阻
  */
-void get_instrument_value(int get_type, double* p_get_val)
+static void get_instrument_value(int get_type, double* p_get_val)
 {
+    QByteArray bytes;
     get_type = get_type;
 	*p_get_val = 10;
-}
 
-int inspect_continuous_voltage(QString table_name)
-{
-    return 0;
+    bytes = com->readAll();
+
+    /* parse byte array*/
 }
 
 /**

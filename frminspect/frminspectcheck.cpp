@@ -2,6 +2,7 @@
 #include "ui_frminspectcheck.h"
 #include "dbinspect.h"
 #include "inspect_flow.h"
+#include "gpibctl.h"
 #include "wordapi.h"
 #include <QDateTime>
 #include<QDir>
@@ -18,6 +19,7 @@ frmInspectCheck::frmInspectCheck(QWidget *parent) :
 
 frmInspectCheck::~frmInspectCheck()
 {
+    this->uninitData();
     delete ui;
 }
 
@@ -65,17 +67,11 @@ void frmInspectCheck::initData()
     strList.clear();
     strList<<"方案一"<<"方案二"<<"方案三";
     ui->comboBox_check_schem->addItems(strList);
-
-    /* 打开GPIB */
-
-    /* 打开串口 */
 }
 
 void frmInspectCheck::uninitData()
 {
-    /* 关闭串口 */
 
-    /* 关闭GPIB */
 }
 
 void frmInspectCheck::on_pushButton_check_check_clicked()

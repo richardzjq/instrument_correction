@@ -65,18 +65,9 @@ ViStatus CloseConnectGPIB(ViPSession instrSesn)
 }
 
 //直流电流设置
-ViStatus Set_DC_Current(ViPSession m_ViSession, double Current, QString Unit_Current)
+ViStatus Set_DC_Current(ViPSession m_ViSession, double Current)
 {
-    qDebug() << __FUNCTION__ << Unit_Current;
-	if(Unit_Current == "mA")
-	{
-        Current *= 1e-3;
-	}
-	else if(Unit_Current == "uA")
-	{
-        Current *= 1e-6;
-	}
-    qDebug() << "Current: " << Current;
+    qDebug() << __FUNCTION__ << "Current: " << Current;
 
     ViStatus status;
 
@@ -89,7 +80,6 @@ ViStatus Set_DC_Current(ViPSession m_ViSession, double Current, QString Unit_Cur
     if (status < VI_SUCCESS)
     {
         qDebug() << "设置直流电流失败";
-        viClose (*m_ViSession);
 
         return status;
     } 
@@ -98,25 +88,17 @@ ViStatus Set_DC_Current(ViPSession m_ViSession, double Current, QString Unit_Cur
  } 
 
 //直流电压设置
-ViStatus Set_DC_Voltage(ViPSession m_ViSession, double Voltage, QString Unit_Voltage)
+ViStatus Set_DC_Voltage(ViPSession m_ViSession, double Voltage)
 {
-    qDebug() << __FUNCTION__ << Unit_Voltage;
-	if(Unit_Voltage == "mV")
-	{
-        Voltage *= 1e-3;
-	}
-    else if(Unit_Voltage == "uV")
-	{
-        Voltage *= 1e-6;
-	}
-    qDebug() << "Voltage: " << Voltage;
+    qDebug() << __FUNCTION__ << "Voltage: " << Voltage;
 
 	ViStatus status;
 
     status = viPrintf(*m_ViSession, "OUT %f V \n",Voltage);
     if (status < VI_SUCCESS)
     {
-        viClose (*m_ViSession);
+        qDebug() << "设置直流电失败";
+
         return status;
     } 
 
@@ -124,32 +106,14 @@ ViStatus Set_DC_Voltage(ViPSession m_ViSession, double Voltage, QString Unit_Vol
  } 
 
 //交流电流设置
-ViStatus Set_AC_Current(ViPSession m_ViSession, double Current, QString Unit_Current, int Frequency, QString Unit_Frequency)
+ViStatus Set_AC_Current(ViPSession m_ViSession, double Current, int Frequency)
 {
-    qDebug() << __FUNCTION__ << Unit_Current << Unit_Frequency;
-	if(Unit_Current == "mA")
-	{
-        Current *= 1e-3;
-	}
-	else if(Unit_Current == "uA")
-	{
-        Current *= 1e-6;
-	}
-
-	if(Unit_Frequency == "KHz")
-	{
-        Frequency *= 1e3;
-	}
-	else if(Unit_Frequency == "MHz")
-	{
-        Frequency *= 1e6;
-	}
-    qDebug() << "Current: " << Current << "Frequency: " << Frequency;
+    qDebug() << __FUNCTION__ << "current: " << Current << "frequency" << Frequency;
 
     ViStatus status = viPrintf(*m_ViSession, "OUT %f A ,%d HZ\n", Current, Frequency);
     if (status < VI_SUCCESS)
     {
-        viClose (*m_ViSession);
+        qDebug() << "设置直流电失败";
         return status;
     } 
 	
@@ -157,35 +121,15 @@ ViStatus Set_AC_Current(ViPSession m_ViSession, double Current, QString Unit_Cur
  } 
 
 //交流电压设置
-ViStatus Set_AC_Voltage(ViPSession m_ViSession, double Voltage, QString Unit_Voltage, int Frequency, QString Unit_Frequency)
+ViStatus Set_AC_Voltage(ViPSession m_ViSession, double Voltage, int Frequency)
 {
-    qDebug() << __FUNCTION__ << Unit_Voltage << Unit_Frequency;
-
-	if(Unit_Voltage == "mV")
-	{
-        Voltage *= 1e-3;
-	}
-	else if(Unit_Voltage == "uV")
-	{
-        Voltage *= 1e-6;
-	}
-
-	if(Unit_Frequency == "KHz")
-	{
-        Frequency *= 1e3;
-	}
-	else if(Unit_Frequency == "MHz")
-	{
-        Frequency *= 1e6;
-	}
-
-    qDebug() << "Voltage: " << Voltage << "Frequency: " << Frequency;
+    qDebug() << __FUNCTION__ << "Voltage: " << Voltage << "frequency" << Frequency;
 
 	ViStatus status;
     status = viPrintf(*m_ViSession, "OUT %f V,%d HZ\n", Voltage, Frequency);
     if (status < VI_SUCCESS)
     {
-        viClose (*m_ViSession);
+        qDebug() << "设置直流电失败";
         return status;
     } 
 	
@@ -193,57 +137,15 @@ ViStatus Set_AC_Voltage(ViPSession m_ViSession, double Voltage, QString Unit_Vol
  } 
 
 //电阻设置
-ViStatus Set_Resistance(ViPSession m_ViSession, double Resistance, QString Unit_Resistance)
+ViStatus Set_Resistance(ViPSession m_ViSession, double Resistance)
 {
-    qDebug() << __FUNCTION__ << Unit_Resistance;
-    if(Unit_Resistance == "Kohm")
-	{
-        Resistance *= 1e3;
-	}
-    else if(Unit_Resistance == "Mohm")
-	{
-        Resistance *= 1e6;
-	}
-    qDebug() << "Resistance: " << Resistance;
+    qDebug() << __FUNCTION__ "Resistance: " << Resistance;
 
 	ViStatus status;
-    status = viPrintf(*m_ViSession, "OUT %f OHM \n",Resistance);
+    status = viPrintf(*m_ViSession, "OUT %f F \n",Resistance);
     if (status < VI_SUCCESS)
     {
-        viClose (*m_ViSession);
-        return status;
-    } 
-
-	return VI_SUCCESS;
- } 
-
-//电容设置
-ViStatus Set_Capacitance(ViPSession m_ViSession, double Capacitance, QString Unit_Capacitance)
-{
-    qDebug() << __FUNCTION__ << Unit_Capacitance;
-	if(Unit_Capacitance == "mF")
-	{
-        Capacitance *= 1e-3;
-	}
-	else if(Unit_Capacitance == "uF")
-	{
-        Capacitance *= 1e-6;
-	}
-	else if(Unit_Capacitance == "nF")
-	{
-        Capacitance *= 1e-9;
-	}
-	else if(Unit_Capacitance == "pF")
-	{
-        Capacitance *= 1e-12;
-	}
-    qDebug() << "Capacitance: " << Capacitance;
-
-	ViStatus status;
-    status = viPrintf(*m_ViSession, "OUT %f F \n",Capacitance);
-    if (status < VI_SUCCESS)
-    {
-        viClose (*m_ViSession);
+        qDebug() << "设置直流电失败";
         return status;
     } 
 

@@ -49,6 +49,11 @@ INCLUDEPATH         += $$PWD/dataout
 INCLUDEPATH         += $$PWD/usercontrol
 INCLUDEPATH         += $$PWD/qextserialport
 
+win32 {
+    INCLUDEPATH += "C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Include"
+    LIBS += "C:\Program Files (x86)\IVI Foundation\VISA\WinNT\lib\msc\visa32.lib"
+}
+
 include             ($$PWD/frmmain/frmmain.pri)
 include             ($$PWD/frminspect/frminspect.pri)
 include             ($$PWD/frmdata/frmdata.pri)

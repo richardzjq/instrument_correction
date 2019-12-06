@@ -1,15 +1,5 @@
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h> 
-#include <iostream>
-#include <string>
-#include "C://Program Files//IVI Foundation//VISA//WinNT//Include//visa.h"
-#pragma comment(lib,"C://Program Files//IVI Foundation//VISA//WinNT//lib//msc//visa32.lib")
-//#pragma comment(lib,"C://Program Files//IVI Foundation//VISA//WinNT//lib//bc//visa32.lib")
-
-
-using namespace std;
+#include <QDebug>
+#include "gpibctl.h"
 
 
 ViStatus AutoConnectGPIB(ViPSession instrSesn)
@@ -18,16 +8,17 @@ ViStatus AutoConnectGPIB(ViPSession instrSesn)
     ViStatus status;
     ViFindList  find_list;
 	ViUInt32 retCnt = 0;
-    char buf [256] = {0};
     ViChar  instrDesc[100]={0};
+
+    qDebug() << __FUNCTION__;
 
 	//打来默认资源管理资源，返回值是状态status,输入参数是资源指针&defaultRM
 	status = viOpenDefaultRM (&defaultRM);
 	//错误处理，VI_SUCCESS值为0
     if (status < VI_SUCCESS)
     {
-     //MessageBox(TEXT("打开默认资源管理资源失败"));
-	  return status;
+        qDebug() << "打开默认资源管理资源失败";
+        return status;
     }
    
 	//查找资源，返回值是状态status，其中输入参数"GPIB?*INSTR"表示所有GPIB的地址字符串
@@ -35,9 +26,10 @@ ViStatus AutoConnectGPIB(ViPSession instrSesn)
 	//错误处理
     if (status < VI_SUCCESS)
     {
-      //MessageBox(TEXT("查找端口失败"));
-	  viClose(defaultRM);
-	  return status;
+        qDebug() << "查找端口失败";
+        viClose(defaultRM);
+
+        return status;
     }
    
 	//打开指定资源的会话，返回值status，其中输入参数&vi为会话资源指针
@@ -45,9 +37,10 @@ ViStatus AutoConnectGPIB(ViPSession instrSesn)
 	//错误处理
     if (status < VI_SUCCESS)
     {
-  //   MessageBox("打开端口资源失败");
-	 viClose(defaultRM);
-	 return status;
+          qDebug() << "打开端口资源失败";
+          viClose(defaultRM);
+
+          return status;
     }
 
 	viPrintf(vi, "*CLS\n");   //清除仪表中命令
@@ -56,195 +49,202 @@ ViStatus AutoConnectGPIB(ViPSession instrSesn)
 	viPrintf(vi, "*IDN?\n"); 
 	viScanf(vi, "%t", &receiveBufferArrary);
 	//输出仪表信息,分别代表制造商、产品型号、产品序列号以及固件版本号
-	//printf("device infomation: %s \n",receiveBufferArrary);
+    qDebug() << "device infomation: " << receiveBufferArrary;
 	*instrSesn = vi;
+
 	return VI_SUCCESS;
 }
 
 ViStatus CloseConnectGPIB(ViPSession instrSesn)
 {
+    qDebug() << __FUNCTION__;
 	ViStatus status;
 	status = viClose(*instrSesn);
+
+    return status;
 }
 
 //直流电流设置
-ViStatus Set_DC_Current(ViPSession m_ViSession , double Current, string Unit_Current)
+ViStatus Set_DC_Current(ViPSession m_ViSession, double Current, QString Unit_Current)
 {
+    qDebug() << __FUNCTION__ << Unit_Current;
 	if(Unit_Current == "mA")
 	{
-		Current*=1e-3;
-		//printf("c= %f ma",Current);
+        Current *= 1e-3;
 	}
 	else if(Unit_Current == "uA")
 	{
-		Current*=1e-6;
-		//printf("c= %f uA",Current);
+        Current *= 1e-6;
 	}
+    qDebug() << "Current: " << Current;
 
-	ViStatus status;
-	char receiveResultArrary[256] = {0};
-	//sprintf(s_EditCurrent, "%f", Current); 
+    ViStatus status;
 
-	status = viPrintf(m_ViSession, "OUT %f A \n",Current); 
-	//viPrintf(m_ViSession, "OUT?\n"); 
-	//status = viPrintf(*m_ViSession, "ADC \n"); 
-	//status = viPrintf(*m_ViSession, "MEAS1? \n"); 
-	//viScanf(*m_ViSession, "%t", &res);
+    status = viPrintf(*m_ViSession, "OUT %f A \n", Current);
+    //viPrintf(m_ViSession, "OUT?\n");
+    //status = viPrintf(*m_ViSession, "ADC \n");
+    //status = viPrintf(*m_ViSession, "MEAS1? \n");
+    //viScanf(*m_ViSession, "%t", &res);
 
     if (status < VI_SUCCESS)
     {
-      //MessageBox(TEXT("设置直流电流失败"));
-      viClose (*m_ViSession);
-	  return status;
+        qDebug() << "设置直流电流失败";
+        viClose (*m_ViSession);
+
+        return status;
     } 
-	//printf("device infomation: %f \n",receiveResultArrary);
+
 	return VI_SUCCESS;
  } 
 
 //直流电压设置
-ViStatus Set_DC_Voltage(ViPSession m_ViSession , double Voltage, string Unit_Voltage)
+ViStatus Set_DC_Voltage(ViPSession m_ViSession, double Voltage, QString Unit_Voltage)
 {
+    qDebug() << __FUNCTION__ << Unit_Voltage;
 	if(Unit_Voltage == "mV")
 	{
-		Voltage*=1e-3;
+        Voltage *= 1e-3;
 	}
-	else if(Unit_Current == "uV")
+    else if(Unit_Voltage == "uV")
 	{
-		Voltage*=1e-6;
+        Voltage *= 1e-6;
 	}
+    qDebug() << "Voltage: " << Voltage;
 
 	ViStatus status;
-	char receiveResultArrary[256] = {0};
 
-	status = viPrintf(m_ViSession, "OUT %f V \n",Voltage); 
+    status = viPrintf(*m_ViSession, "OUT %f V \n",Voltage);
     if (status < VI_SUCCESS)
     {
-      viClose (*m_ViSession);
-	  return status;
+        viClose (*m_ViSession);
+        return status;
     } 
 
 	return VI_SUCCESS;
  } 
 
 //交流电流设置
-ViStatus Set_AC_Current(ViPSession m_ViSession , double Current, string Unit_Current，int Frequency,string Unit_Frequency)
+ViStatus Set_AC_Current(ViPSession m_ViSession, double Current, QString Unit_Current, int Frequency, QString Unit_Frequency)
 {
+    qDebug() << __FUNCTION__ << Unit_Current << Unit_Frequency;
 	if(Unit_Current == "mA")
 	{
-		Current*=1e-3;
+        Current *= 1e-3;
 	}
 	else if(Unit_Current == "uA")
 	{
-		Current*=1e-6;
+        Current *= 1e-6;
 	}
 
 	if(Unit_Frequency == "KHz")
 	{
-		Frequency*=1e3;
+        Frequency *= 1e3;
 	}
 	else if(Unit_Frequency == "MHz")
 	{
-		Frequency*=1e6;
+        Frequency *= 1e6;
 	}
+    qDebug() << "Current: " << Current << "Frequency: " << Frequency;
 
-	ViStatus status;
-	char receiveResultArrary[256] = {0};
-	status = viPrintf(m_ViSession, "OUT %f A ,%d HZ\n",Current,Frequency); 
+    ViStatus status = viPrintf(*m_ViSession, "OUT %f A ,%d HZ\n", Current, Frequency);
     if (status < VI_SUCCESS)
     {
-      viClose (*m_ViSession);
-	  return status;
+        viClose (*m_ViSession);
+        return status;
     } 
 	
 	return VI_SUCCESS;
  } 
 
 //交流电压设置
-ViStatus Set_AC_Voltage(ViPSession m_ViSession , double Voltage, string Unit_Voltage，int Frequency,string Unit_Frequency)
+ViStatus Set_AC_Voltage(ViPSession m_ViSession, double Voltage, QString Unit_Voltage, int Frequency, QString Unit_Frequency)
 {
+    qDebug() << __FUNCTION__ << Unit_Voltage << Unit_Frequency;
+
 	if(Unit_Voltage == "mV")
 	{
-		Voltage*=1e-3;
+        Voltage *= 1e-3;
 	}
 	else if(Unit_Voltage == "uV")
 	{
-		Voltage*=1e-6;
+        Voltage *= 1e-6;
 	}
 
 	if(Unit_Frequency == "KHz")
 	{
-		Frequency*=1e3;
+        Frequency *= 1e3;
 	}
 	else if(Unit_Frequency == "MHz")
 	{
-		Frequency*=1e6;
+        Frequency *= 1e6;
 	}
 
+    qDebug() << "Voltage: " << Voltage << "Frequency: " << Frequency;
+
 	ViStatus status;
-	char receiveResultArrary[256] = {0};
-	status = viPrintf(m_ViSession, "OUT %f V,%d HZ\n",Voltage,Frequency); 
+    status = viPrintf(*m_ViSession, "OUT %f V,%d HZ\n", Voltage, Frequency);
     if (status < VI_SUCCESS)
     {
-      viClose (*m_ViSession);
-	  return status;
+        viClose (*m_ViSession);
+        return status;
     } 
 	
 	return VI_SUCCESS;
  } 
 
 //电阻设置
-ViStatus Set_Resistance(ViPSession m_ViSession , double Resistance, string Unit_Resistance)
+ViStatus Set_Resistance(ViPSession m_ViSession, double Resistance, QString Unit_Resistance)
 {
-	if(Unit_Capacitance == "Kohm")
+    qDebug() << __FUNCTION__ << Unit_Resistance;
+    if(Unit_Resistance == "Kohm")
 	{
-		Resistance*=1e3;
+        Resistance *= 1e3;
 	}
-	else if(Unit_Capacitance == "Mohm")
+    else if(Unit_Resistance == "Mohm")
 	{
-		Resistance*=1e6;
+        Resistance *= 1e6;
 	}
-	
-	ViStatus status;
-	char receiveResultArrary[256] = {0};
+    qDebug() << "Resistance: " << Resistance;
 
-	status = viPrintf(m_ViSession, "OUT %f OHM \n",Resistance); 
+	ViStatus status;
+    status = viPrintf(*m_ViSession, "OUT %f OHM \n",Resistance);
     if (status < VI_SUCCESS)
     {
-      viClose (*m_ViSession);
-	  return status;
+        viClose (*m_ViSession);
+        return status;
     } 
 
 	return VI_SUCCESS;
  } 
 
 //电容设置
-ViStatus Set_Capacitance(ViPSession m_ViSession , double Capacitance, string Unit_Capacitance)
+ViStatus Set_Capacitance(ViPSession m_ViSession, double Capacitance, QString Unit_Capacitance)
 {
+    qDebug() << __FUNCTION__ << Unit_Capacitance;
 	if(Unit_Capacitance == "mF")
 	{
-		Capacitance*=1e-3;
+        Capacitance *= 1e-3;
 	}
 	else if(Unit_Capacitance == "uF")
 	{
-		Capacitance*=1e-6;
+        Capacitance *= 1e-6;
 	}
 	else if(Unit_Capacitance == "nF")
 	{
-		Capacitance*=1e-9;
+        Capacitance *= 1e-9;
 	}
 	else if(Unit_Capacitance == "pF")
 	{
-		Capacitance*=1e-12;
+        Capacitance *= 1e-12;
 	}
+    qDebug() << "Capacitance: " << Capacitance;
 
 	ViStatus status;
-	char receiveResultArrary[256] = {0};
-
-	status = viPrintf(m_ViSession, "OUT %f F \n",Capacitance); 
+    status = viPrintf(*m_ViSession, "OUT %f F \n",Capacitance);
     if (status < VI_SUCCESS)
     {
-      viClose (*m_ViSession);
-	  return status;
+        viClose (*m_ViSession);
+        return status;
     } 
 
 	return VI_SUCCESS;

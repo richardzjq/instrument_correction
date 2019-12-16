@@ -7,6 +7,9 @@
 #include <QDateTime>
 #include<QDir>
 #include<QDebug>
+#include <QStringListModel>
+#include <QStandardItemModel>
+#include <QModelIndex>
 
 
 frmInspectCheck::frmInspectCheck(QWidget *parent) :
@@ -14,7 +17,7 @@ frmInspectCheck::frmInspectCheck(QWidget *parent) :
     ui(new Ui::frmInspectCheck)
 {
     ui->setupUi(this);
-    this->initData();
+    //this->initData();
 }
 
 frmInspectCheck::~frmInspectCheck()
@@ -62,32 +65,41 @@ void frmInspectCheck::initData()
         all_columns << columns;
     }
 
-    ui->comboBox_check_instrument->addItems(all_columns);
+    //ui->comboBox_check_instrument->addItems(all_columns);
 
-    strList.clear();
-    strList<<"方案一"<<"方案二"<<"方案三";
-    ui->comboBox_check_schem->addItems(strList);
+    QStandardItemModel *ItemModel = new QStandardItemModel(this);
+    int nCount = all_columns.size();
+    for(int i = 0; i < nCount; i++)
+    {
+        QString string = static_cast<QString>(all_columns.at(i));
+        QStandardItem *item = new QStandardItem(string);
+        ItemModel->appendRow(item);
+    }
+    //ui->listView_instruments->setModel(ItemModel);
+
+    dbInspect_instruments.close_database();
 }
 
 void frmInspectCheck::uninitData()
 {
-
 }
 
+#if 0
 void frmInspectCheck::on_pushButton_check_check_clicked()
 {
     const QString filePath = QCoreApplication::applicationDirPath();
-    QString current_Date_Time = QDateTime::currentDateTime().toString("yyyy-MM-dd-hh-mm-ss-zzz");
+    QString current_Date_Time = QDateTime::currentDateTime().toString("yyyy-MM-dd-hh-mm-ss");
     QString fileName_db_schem = filePath + "/db/inspect_schem.db";
-    QString fileName_db_result = filePath + "/db/instruments-" + current_Date_Time +".db";
+    QString fileName_db_result = filePath + "/db/instrument-" + current_Date_Time +".db";
 
     inspect_follow_schem(fileName_db_schem, fileName_db_result);
 }
+#endif
 
 static void save_inspect_result_to_word()
 {
     const QString filePath = QCoreApplication::applicationDirPath();
-    QString current_Date_Time = QDateTime::currentDateTime().toString("yyyy-MM-dd-hh-mm-ss-zzz");
+    QString current_Date_Time = QDateTime::currentDateTime().toString("yyyy-MM-dd-hh-mm-ss");
     QString fileName_last = "数字表校准原始记录格式" + current_Date_Time;
     QString fileName;
 
@@ -175,9 +187,4 @@ static void save_inspect_result_to_word()
 
     wordApi.setVisible(true);
     wordApi.saveAs();
-}
-
-void frmInspectCheck::on_pushButton_check_print_clicked()
-{
-    save_inspect_result_to_word();
 }

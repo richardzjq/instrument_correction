@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>frmInspectMain</class>
+ <widget class="QWidget" name="frmInspectMain">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1214</width>
+    <height>758</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QWidget" name="widget_btn" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>971</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <widget class="QPushButton" name="btn_refresh">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>20</y>
+      <width>93</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="text">
+     <string>刷新记录</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_new_inspect">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>20</y>
+      <width>93</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="text">
+     <string>新建检定</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_exit">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>20</y>
+      <width>93</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="text">
+     <string>退出系统</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="widget_filter" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>90</y>
+     <width>971</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <widget class="QLabel" name="label_inspected_institution">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>送检单位</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_inspected_institution">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>20</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_inspected_date">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>20</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_inspected_date">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>20</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>检定日期</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_inspect_conclusion">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>20</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_inspect_conclusion">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>20</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>检定结论</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_sample_name">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>100</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_sample_specification">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>100</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>样品规格</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_sample_specification">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>100</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_inspector">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>100</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>检定员</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_sample_name">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>100</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>样品名称</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_inspector">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>100</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget_record">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>271</y>
+     <width>1131</width>
+     <height>401</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

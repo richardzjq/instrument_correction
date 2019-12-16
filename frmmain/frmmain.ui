@@ -269,6 +269,19 @@
              </spacer>
             </item>
             <item>
+             <widget class="QPushButton" name="btn_main">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>主界面</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="btn_inspect">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
@@ -282,7 +295,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="btnData">
+             <widget class="QPushButton" name="btn_config">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
                 <horstretch>0</horstretch>
@@ -290,20 +303,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnConfig">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string/>
+               <string>配置</string>
               </property>
              </widget>
             </item>
@@ -333,8 +333,7 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>btnData</tabstop>
-  <tabstop>btnConfig</tabstop>
+  <tabstop>btn_config</tabstop>
   <tabstop>btnMenu_Min</tabstop>
   <tabstop>btnMenu_Max</tabstop>
   <tabstop>btnMenu_Close</tabstop>

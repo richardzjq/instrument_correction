@@ -139,7 +139,7 @@ ViStatus Set_AC_Voltage(ViPSession m_ViSession, double Voltage, int Frequency)
 //µç×èÉèÖÃ
 ViStatus Set_Resistance(ViPSession m_ViSession, double Resistance)
 {
-    qDebug() << __FUNCTION__ "Resistance: " << Resistance;
+    qDebug() << __FUNCTION__ << "Resistance: " << Resistance;
 
 	ViStatus status;
     status = viPrintf(*m_ViSession, "OUT %f F \n",Resistance);

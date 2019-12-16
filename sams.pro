@@ -39,7 +39,6 @@ RESOURCES           += other/qss.qrc
 
 INCLUDEPATH         += $$PWD/frmmain
 INCLUDEPATH         += $$PWD/frminspect
-INCLUDEPATH         += $$PWD/frmdata
 INCLUDEPATH         += $$PWD/frmconfig
 
 INCLUDEPATH         += $$PWD
@@ -56,7 +55,6 @@ win32 {
 
 include             ($$PWD/frmmain/frmmain.pri)
 include             ($$PWD/frminspect/frminspect.pri)
-include             ($$PWD/frmdata/frmdata.pri)
 include             ($$PWD/frmconfig/frmconfig.pri)
 
 include             ($$PWD/api/api.pri)

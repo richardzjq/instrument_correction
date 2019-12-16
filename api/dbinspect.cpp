@@ -146,8 +146,8 @@ void DBInspect::get_table_content(QString tab_name, QStringList* p_table_content
         qDebug() << line_count;
         int line;
     
-        for(line = 0; line < line_count; line++)
-           qDebug() << QString( "line %1: %2" ).arg(line).arg( rec.fieldName(line) );
+        //for(line = 0; line < line_count; line++)
+        //   qDebug() << QString( "line %1: %2" ).arg(line).arg( rec.fieldName(line) );
       
         while(query.next())
 		{
@@ -156,13 +156,13 @@ void DBInspect::get_table_content(QString tab_name, QStringList* p_table_content
 			line_content.clear();
             for(line = 0; line < line_count; line++)
 			{
-                line_content += query.value(line).toString() + "-";
+                line_content += query.value(line).toString() + ",";
 	        }
 			
             qDebug() << line_content;
 			*p_table_content << line_content;
 		}
-        qDebug() << *p_table_content;
+        //qDebug() << *p_table_content;
 	}
 	else    
 	{        
@@ -200,8 +200,8 @@ void DBInspect::get_column_content(QString tab_name, QString col_name, QStringLi
         qDebug() << line_count;
         int line;
 
-        for(line = 0; line < line_count; line++)
-           qDebug() << QString( "line %1: %2" ).arg(line).arg( rec.fieldName(line) );
+        //for(line = 0; line < line_count; line++)
+        //   qDebug() << QString( "line %1: %2" ).arg(line).arg( rec.fieldName(line) );
 
         while(query.next())
         {
@@ -211,6 +211,59 @@ void DBInspect::get_column_content(QString tab_name, QString col_name, QStringLi
             for(line = 0; line < line_count; line++)
             {
                 line_content += query.value(line).toString();
+            }
+
+            qDebug() << line_content;
+            *p_col_content << line_content;
+        }
+        qDebug() << *p_col_content;
+    }
+    else
+    {
+        qDebug() << query.lastError();
+    }
+}
+
+/* 根据条件查询一个表中某一字段的记录 */
+void DBInspect::get_table_content_by_condition(QString select_rule, QStringList* p_col_content)
+{
+    if(nullptr == m_db)
+    {
+        qDebug() <<"database is not set!";
+        return ;
+    }
+
+    QSqlQuery query(*m_db);
+    qDebug() << __FUNCTION__ << *m_db;
+    qDebug() << select_rule;
+
+    query.prepare(select_rule);
+
+    if(!p_col_content)
+    {
+         qDebug() << "传入空指针";
+         return ;
+    }
+
+    if (query.exec())
+    {
+        QSqlRecord rec = query.record();
+
+        int line_count = rec.count();
+        qDebug() << line_count;
+        int line;
+
+        //for(line = 0; line < line_count; line++)
+        //   qDebug() << QString( "line %1: %2" ).arg(line).arg( rec.fieldName(line) );
+
+        while(query.next())
+        {
+            QString line_content;
+
+            line_content.clear();
+            for(line = 0; line < line_count; line++)
+            {
+                line_content += query.value(line).toString() + ",";
             }
 
             qDebug() << line_content;
@@ -265,4 +318,24 @@ void DBInspect::add_one_line_into_table(QString add_line_instruction)
 	{                
         qDebug() << query.lastError();       
 	}
+}
+
+/* 从数据库table删除一行内容 */
+void DBInspect::delete_one_line_into_table(QString delete_line_instruction)
+{
+    if(nullptr == m_db)
+    {
+        qDebug() <<"database is not set!";
+        return ;
+    }
+
+    QSqlQuery query(*m_db);
+    query.prepare(delete_line_instruction);
+    qDebug() << __FUNCTION__ << *m_db;
+    qDebug() << delete_line_instruction;
+
+    if (!query.exec())
+    {
+        qDebug() << query.lastError();
+    }
 }

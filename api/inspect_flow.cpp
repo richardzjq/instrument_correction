@@ -8,22 +8,20 @@
 #include <QDebug>
 
 
-static bool isComOk;
-static QextSerialPort *com;
+static bool isComOk = false;
+static QextSerialPort *com = nullptr;
 //static QTimer *timerRead;
 //static QTimer *timerData;
 
-static ViPSession pViSession;
+static ViSession viSession = 0;
 
 
 static void initData()
 {
     /* 打开GPIB */
     ViStatus status;
-    ViSession viSes;
 
-    status = AutoConnectGPIB(&viSes);
-    pViSession = &viSes;
+    status = AutoConnectGPIB(&viSession);
 
     /* 打开串口 */
     isComOk = false;
@@ -62,12 +60,8 @@ static void uninitData()
     //timerRead->stop();
 
     /* 关闭GPIB */
-    if(pViSession)
-    {
-        CloseConnectGPIB(pViSession);
-        delete pViSession;
-        pViSession = nullptr;
-    }
+    CloseConnectGPIB(&viSession);
+    viSession = 0;
 }
 
 /**
@@ -88,7 +82,7 @@ static void get_instrument_value(int get_type, double* p_get_val)
     get_type = get_type;
 	*p_get_val = 10;
 
-    bytes = com->readAll();
+    //bytes = com->readAll();
 
     /* parse byte array*/
 }
@@ -103,6 +97,8 @@ void inspect_follow_schem(QString schem_db_name, QString instrument_db_name)
 
 	QStringList tables;
 	int tables_count;
+
+    //initData();
 
     /* 打开数据库 */
     bool open_schem_db, open_result_db;
@@ -194,5 +190,7 @@ void inspect_follow_schem(QString schem_db_name, QString instrument_db_name)
     /* 关闭数据库 */
     dbInspect_schem.close_database();
     dbInspect_result.close_database();
+
+    //uninitData();
 }
 

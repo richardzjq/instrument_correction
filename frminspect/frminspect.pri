@@ -1,12 +1,21 @@
 FORMS += \
-    $$PWD/frminspect.ui \
-    $$PWD/frminspectcheck.ui
+    $$PWD/frminspectmain.ui \
+    $$PWD/frminspectcheck.ui \
+    $$PWD/frminspectmain.ui \
+    $$PWD/frminspecttemplate.ui \
+    $$PWD/frminspectproject.ui
 
 HEADERS += \
-    $$PWD/frminspect.h \
-    $$PWD/frminspectcheck.h
+    $$PWD/frminspectmain.h \
+    $$PWD/frminspectcheck.h \
+    $$PWD/frminspectmain.h \
+    $$PWD/frminspecttemplate.h \
+    $$PWD/frminspectproject.h
 
 SOURCES += \
-    $$PWD/frminspect.cpp \
-    $$PWD/frminspectcheck.cpp
+    $$PWD/frminspectmain.cpp \
+    $$PWD/frminspectcheck.cpp \
+    $$PWD/frminspectmain.cpp \
+    $$PWD/frminspecttemplate.cpp \
+    $$PWD/frminspectproject.cpp
 

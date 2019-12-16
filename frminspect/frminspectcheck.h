@@ -19,10 +19,6 @@ private slots:
     void initData();
     void uninitData();
 
-private slots:
-    void on_pushButton_check_check_clicked();
-    void on_pushButton_check_print_clicked();
-
 private:
     Ui::frmInspectCheck *ui;
 };

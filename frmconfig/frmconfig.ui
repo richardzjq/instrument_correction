@@ -43,27 +43,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnConfigModel">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnConfigInstrument">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnConfigSchem">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="btnConfigPort">
         <property name="text">
          <string/>

@@ -28,6 +28,12 @@ private slots:
     void initData(void);
     void refresh_record_table(void);
 
+    void on_comboBox_inspected_institution_currentIndexChanged(const QString &arg1);
+    void on_comboBox_inspected_date_currentIndexChanged(const QString &arg1);
+    void on_comboBox_inspect_conclusion_currentIndexChanged(const QString &arg1);
+    void on_comboBox_sample_name_currentIndexChanged(const QString &arg1);
+    void on_comboBox_sample_specification_currentIndexChanged(const QString &arg1);
+    void on_comboBox_inspector_currentIndexChanged(const QString &arg1);
 };
 
 #endif // FRMINSPECTMAIN_H

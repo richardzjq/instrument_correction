@@ -165,35 +165,35 @@ void frmInspectMain::refresh_record_table(void)
     {
         if(0 != inspected_institution.compare("全部"))
         {
-            select_rule_condition = "送检单位 == " + inspected_institution;
+            select_rule_condition = QString("送检单位 == '%1'").arg(inspected_institution);
         }
 
         if(0 != inspected_date.compare("全部"))
         {
-            select_rule_condition = " and 检定日期 == " + inspected_date;
+            select_rule_condition = select_rule_condition + QString(" and 检定日期 == '%1'").arg(inspected_date);
         }
 
         if(0 != inspect_conclusion.compare("全部"))
         {
-            select_rule_condition = " and 检定结论 == " + inspect_conclusion;
+            select_rule_condition = select_rule_condition + QString(" and 检定结论 == '%1'").arg(inspect_conclusion);
         }
 
         if(0 != sample_name.compare("全部"))
         {
-            select_rule_condition = " and 仪器名称 == " + sample_name;
+            select_rule_condition = select_rule_condition + QString(" and 仪器名称 == '%1'").arg(sample_name);
         }
 
         if(0 != sample_specification.compare("全部"))
         {
-            select_rule_condition = " and 型号规格 == " + sample_specification;
+            select_rule_condition = select_rule_condition + QString(" and 型号规格 == '%1'").arg(sample_specification);
         }
 
         if(0 != inspector.compare("全部"))
         {
-            select_rule_condition = " and 检定员 == " + inspector;
+            select_rule_condition = select_rule_condition + QString(" and 检定员 == '%1'").arg(inspector);
         }
 
-        select_rule = "select * where " + select_rule_condition + " from " + record_table_name;
+        select_rule = "select * from " + record_table_name + " where " + select_rule_condition;
     }
     qDebug() << select_rule;
 
@@ -219,4 +219,34 @@ void frmInspectMain::refresh_record_table(void)
 
         row_inc++;
     }
+}
+
+void frmInspectMain::on_comboBox_inspected_institution_currentIndexChanged(const QString &arg1)
+{
+    refresh_record_table();
+}
+
+void frmInspectMain::on_comboBox_inspected_date_currentIndexChanged(const QString &arg1)
+{
+    refresh_record_table();
+}
+
+void frmInspectMain::on_comboBox_inspect_conclusion_currentIndexChanged(const QString &arg1)
+{
+    refresh_record_table();
+}
+
+void frmInspectMain::on_comboBox_sample_name_currentIndexChanged(const QString &arg1)
+{
+    refresh_record_table();
+}
+
+void frmInspectMain::on_comboBox_sample_specification_currentIndexChanged(const QString &arg1)
+{
+    refresh_record_table();
+}
+
+void frmInspectMain::on_comboBox_inspector_currentIndexChanged(const QString &arg1)
+{
+    refresh_record_table();
 }

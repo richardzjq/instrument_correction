@@ -210,16 +210,6 @@
     <string>辅助参数</string>
    </property>
   </widget>
-  <widget class="QTreeView" name="treeView_inspected_project">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>260</y>
-     <width>501</width>
-     <height>471</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_standard_source">
    <property name="geometry">
     <rect>
@@ -312,6 +302,16 @@
    </property>
    <property name="text">
     <string>开始</string>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget_inspect_result">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>280</y>
+     <width>521</width>
+     <height>431</height>
+    </rect>
    </property>
   </widget>
  </widget>

@@ -132,16 +132,6 @@
     <string>固定参数</string>
    </property>
   </widget>
-  <widget class="QTableView" name="tableView_selected_template">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>320</y>
-     <width>611</width>
-     <height>351</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_type">
    <property name="geometry">
     <rect>
@@ -153,16 +143,6 @@
    </property>
    <property name="text">
     <string>模板类别</string>
-   </property>
-  </widget>
-  <widget class="QTreeView" name="treeView_inspected_project">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>90</y>
-     <width>361</width>
-     <height>581</height>
-    </rect>
    </property>
   </widget>
   <widget class="QLabel" name="label_name">
@@ -357,6 +337,31 @@
      <string>删除行</string>
     </property>
    </widget>
+  </widget>
+  <widget class="QTreeWidget" name="treeWidget_template">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>90</y>
+     <width>381</width>
+     <height>581</height>
+    </rect>
+   </property>
+   <column>
+    <property name="text">
+     <string notr="true">1</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget_template">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>330</y>
+     <width>621</width>
+     <height>341</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>

@@ -121,6 +121,7 @@ void frmInspectMain::initForm(void)
     /* 获得第一张表中的column和数量 */
     QStringList columns;
     dbInspect_record.get_columns(record_table_name, &columns, &columns_count);
+    qDebug() << columns << columns_count;
 
     ui->tableWidget_record->setWindowTitle(record_table_name);
     ui->tableWidget_record->setColumnCount(columns_count);

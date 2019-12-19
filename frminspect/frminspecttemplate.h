@@ -1,4 +1,4 @@
-#ifndef FRMINSPECTTEMPLATE_H
+﻿#ifndef FRMINSPECTTEMPLATE_H
 #define FRMINSPECTTEMPLATE_H
 
 #include <QWidget>
@@ -17,6 +17,10 @@ public:
 
 private:
     Ui::frmInspectTemplate *ui;
+
+private slots:
+    void initForm(void);
+    void uninitForm(void);
 };
 
 #endif // FRMINSPECTTEMPLATE_H

@@ -2,6 +2,7 @@
 #define FRMINSPECTCHECK_H
 
 #include <QWidget>
+#include "dbinspect.h"
 
 namespace Ui {
 class frmInspectCheck;
@@ -15,12 +16,16 @@ public:
     explicit frmInspectCheck(QWidget *parent = nullptr);
     ~frmInspectCheck();
 
-private slots:
-    void initData();
-    void uninitData();
 
 private:
     Ui::frmInspectCheck *ui;
+    DBInspect dbInspect_record;
+    QString record_table_name;
+    int columns_count;
+
+private slots:
+    void initForm(void);
+    void uninitForm(void);
 };
 
 #endif // FRMINSPECTCHECK_H

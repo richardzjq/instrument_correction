@@ -1,7 +1,5 @@
 ﻿#include "frminspectcheck.h"
 #include "ui_frminspectcheck.h"
-#include "dbinspect.h"
-#include "inspect_flow.h"
 #include "gpibctl.h"
 #include "wordapi.h"
 #include <QDateTime>
@@ -17,174 +15,103 @@ frmInspectCheck::frmInspectCheck(QWidget *parent) :
     ui(new Ui::frmInspectCheck)
 {
     ui->setupUi(this);
-    //this->initData();
+    this->initForm();
 }
 
 frmInspectCheck::~frmInspectCheck()
 {
-    this->uninitData();
+    this->uninitForm();
     delete ui;
 }
 
-void frmInspectCheck::initData()
+void frmInspectCheck::initForm(void)
 {
-    /* 初始化combobox */
+    /* 初始化记录编号等各项 */
+    ui->lineEdit_record_number->setText("0");
+    QString current_Date_Time = QDateTime::currentDateTime().toString("yyyy-MM-dd");
+    ui->lineEdit_inspect_date->setText(current_Date_Time);
+
     QStringList strList;
-    const QString filePath = QCoreApplication::applicationDirPath();
-    QString fileName_db_instruments = filePath + "/db/instruments.db";
-    DBInspect dbInspect_instruments;
-    QStringList tables;
-    QStringList all_columns;
-    int tables_count;
+
+    strList.clear();
+    strList << "合格" << "不合格";
+    ui->comboBox_inspect_conclusion->addItems(strList);
+
+    strList.clear();
+    strList << "湖北钢铁厂" << "湖北电科院";
+    ui->comboBox_inspected_institution->addItems(strList);
+
+    strList.clear();
+    strList << "刘慈欣" << "逻辑" << "史强";
+    ui->comboBox_inspector->addItems(strList);
+
+    strList.clear();
+    strList << "程心" << "韦德" << "乔恩斯";
+    ui->comboBox_verifier->addItems(strList);
+
+    strList.clear();
+    strList << "数字式万用表" << "指针式万用表";
+    ui->comboBox_sample_name->addItems(strList);
+
+    strList.clear();
+    strList << "UT52" << "UT58";
+    ui->comboBox_model_specification->addItems(strList);
+
+    ui->lineEdit_temperature->setText("20");
+    ui->lineEdit_humidity->setText("60");
+
+    strList.clear();
+    strList << "UNI-T" << "UNI-S";
+    ui->comboBox_manufacture->addItems(strList);
+
+    ui->lineEdit_manufacted_number->setText("ZFL9008");
+
+    strList.clear();
+    strList << "UNI-T" << "UNI-S";
+    ui->comboBox_standard_device->addItems(strList);
+
+    strList.clear();
+    strList << "JJG315-83" << "JJG315-8398";
+    ui->comboBox_refered_rule->addItems(strList);
 
     /* 打开数据库 */
-    bool open_instruments_db;
+    bool open_record_db;
+    const QString filePath = QCoreApplication::applicationDirPath();
+    QString fileName_db_record = filePath + "/db/inspect_record.db";
 
-    open_instruments_db = dbInspect_instruments.open_database(fileName_db_instruments);
+    open_record_db = dbInspect_record.open_database(fileName_db_record);
 
-    if(open_instruments_db == false)
+    if(open_record_db == false)
     {
         /* 关闭数据库 */
-        dbInspect_instruments.close_database();
-        qDebug() << "Open databas fail!";
+        dbInspect_record.close_database();
+
+        qDebug() << __FUNCTION__ << "Open databas fail!";
     }
 
-    /* 获得仪表数据库文件中的table和数量 */
-    dbInspect_instruments.get_tables(&tables, &tables_count);
-    QStringListIterator itr_tables(tables);
+    /* 查询  检定记录编号  的所有记录 */
+    dbInspect_record.get_column_content("检定记录", "检定记录编号", &strList);
 
-    /* 遍历表，根据表内容添加支持的仪表 */
-    all_columns.clear();
-    while (itr_tables.hasNext())
-    {
-        QStringList columns;
-        QString table_name = itr_tables.next().toLocal8Bit();
 
-        dbInspect_instruments.get_column_content(table_name, "仪表型号", &columns);
+    ui->treeWidget_inpsected_project->setColumnCount(1);
 
-        all_columns << columns;
-    }
+    strList.clear();
+    strList << "已检定项目";
+    ui->treeWidget_inpsected_project->setHeaderLabels(strList);
 
-    //ui->comboBox_check_instrument->addItems(all_columns);
+    QTreeWidgetItem *root = new QTreeWidgetItem(ui->treeWidget_inpsected_project, QStringList(QString("已检定项目")));
 
-    QStandardItemModel *ItemModel = new QStandardItemModel(this);
-    int nCount = all_columns.size();
-    for(int i = 0; i < nCount; i++)
-    {
-        QString string = static_cast<QString>(all_columns.at(i));
-        QStandardItem *item = new QStandardItem(string);
-        ItemModel->appendRow(item);
-    }
-    //ui->listView_instruments->setModel(ItemModel);
+    QTreeWidgetItem *leaf1 = new QTreeWidgetItem(root, QStringList(QString("Leaf 1")));
+    root->addChild(leaf1);
+    QTreeWidgetItem *leaf2 = new QTreeWidgetItem(root, QStringList(QString("Leaf 2")));
+    root->addChild(leaf2);
 
-    dbInspect_instruments.close_database();
+    QList<QTreeWidgetItem *> rootList;
+    rootList << root;
+    ui->treeWidget_inpsected_project->insertTopLevelItems(0, rootList);
 }
 
-void frmInspectCheck::uninitData()
+void frmInspectCheck::uninitForm(void)
 {
-}
-
-#if 0
-void frmInspectCheck::on_pushButton_check_check_clicked()
-{
-    const QString filePath = QCoreApplication::applicationDirPath();
-    QString current_Date_Time = QDateTime::currentDateTime().toString("yyyy-MM-dd-hh-mm-ss");
-    QString fileName_db_schem = filePath + "/db/inspect_schem.db";
-    QString fileName_db_result = filePath + "/db/instrument-" + current_Date_Time +".db";
-
-    inspect_follow_schem(fileName_db_schem, fileName_db_result);
-}
-#endif
-
-static void save_inspect_result_to_word()
-{
-    const QString filePath = QCoreApplication::applicationDirPath();
-    QString current_Date_Time = QDateTime::currentDateTime().toString("yyyy-MM-dd-hh-mm-ss");
-    QString fileName_last = "数字表校准原始记录格式" + current_Date_Time;
-    QString fileName;
-
-    qDebug() << __FUNCTION__;
-
-    QDir dirReportPath(filePath);
-    if (!dirReportPath.exists())
-    {
-        if (dirReportPath.mkpath(filePath))
-        {
-            fileName = filePath + "/doc/" + fileName_last + ".doc";
-        }
-    }
-    else
-    {
-        fileName = filePath + "/doc/" + fileName_last + ".doc";
-    }
-
-    qDebug() << fileName;
-
-    WordApi wordApi;
-    if( !wordApi.createNewWord(fileName) )
-    {
-        qDebug() << "Failed to export report," + wordApi.getStrErrorInfo();
-        return;
-    }
-
-    wordApi.setPageOrientation(0);			//页面方向
-    wordApi.setWordPageView(3);			    //页面视图
-    wordApi.setParagraphAlignment(0);		//下面文字位置
-    wordApi.setFontSize(20);				    //字体大小
-
-    wordApi.setFontBold(true);				    //字体加粗
-    wordApi.insertText("数字表校准原始记录格式");
-
-    wordApi.setFontBold(false);
-    wordApi.insertMoveDown();
-    wordApi.setFontSize(10);
-    wordApi.setParagraphAlignment(1);
-
-    QString current_Time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
-    wordApi.insertText("Report Generation Date:");
-    wordApi.insertText(current_Time);
-    wordApi.insertMoveDown();
-
-    //第一个表
-    wordApi.intsertTable(5,3);
-    wordApi.setTableAutoFitBehavior(0);
-
-    //合并单元格一 二 四行
-    wordApi.MergeCells(1, 1, 1, 1, 2);
-    wordApi.MergeCells(1, 2, 1, 2, 2);
-    wordApi.MergeCells(1, 4, 1, 4, 2);
-
-    wordApi.setCellString(1,1,1, "委托单位：");
-    wordApi.setCellString(1,1,2, "校准证书编号：");
-    wordApi.setCellString(1,2,1, "委托单位地址：");
-    wordApi.setCellString(1,2,2, "标准依据：");
-    wordApi.setCellString(1,3,1, "仪器名称：");
-    wordApi.setCellString(1,3,2, "型号规格：");
-    wordApi.setCellString(1,3,3, "出厂编号：");
-    wordApi.setCellString(1,4,1, "制造单位：");
-    wordApi.setCellString(1,4,2, "仪器状况：");
-    wordApi.setCellString(1,5,1, "校准地点：");
-    wordApi.setCellString(1,5,2, "环境温度：");
-    wordApi.setCellString(1,5,3, "相对湿度：");
-    wordApi.moveForEnd();
-    wordApi.insertMoveDown();
-    wordApi.insertMoveDown();
-
-    wordApi.insertText("校准用主要计量标准器具");
-    wordApi.insertMoveDown();
-
-    //第二个表
-    wordApi.intsertTable(4,6);
-    wordApi.setCellString(2,1,1, "名称");
-    wordApi.setCellString(2,1,2, "型号规格");
-    wordApi.setCellString(2,1,3, "不确定度／准确度等级／最大允许误差");
-    wordApi.setCellString(2,1,4, "出厂编号");
-    wordApi.setCellString(2,1,5, "证书编号");
-    wordApi.setCellString(2,1,6, "有效期");
-    wordApi.setTableAutoFitBehavior(0);
-    wordApi.moveForEnd();
-    wordApi.insertMoveDown();
-
-    wordApi.setVisible(true);
-    wordApi.saveAs();
+    dbInspect_record.close_database();
 }

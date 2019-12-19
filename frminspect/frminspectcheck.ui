@@ -6,23 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1025</width>
-    <height>882</height>
+    <width>1051</width>
+    <height>959</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QTableView" name="tableView_selected_template">
-   <property name="geometry">
-    <rect>
-     <x>470</x>
-     <y>510</y>
-     <width>541</width>
-     <height>371</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QWidget" name="widget_filter" native="true">
    <property name="geometry">
     <rect>
@@ -32,16 +22,6 @@
      <height>321</height>
     </rect>
    </property>
-   <widget class="QComboBox" name="comboBox_inspected_date">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>20</y>
-      <width>151</width>
-      <height>41</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_inspected_date">
     <property name="geometry">
      <rect>
@@ -301,7 +281,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>出场编号</string>
+     <string>出厂编号</string>
     </property>
    </widget>
    <widget class="QComboBox" name="comboBox_standard_device">
@@ -318,16 +298,6 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>200</y>
-      <width>151</width>
-      <height>41</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBox_manufact_number">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
       <y>200</y>
       <width>151</width>
       <height>41</height>
@@ -378,6 +348,26 @@
     </property>
     <property name="text">
      <string>备注</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_inspect_date">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>20</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_manufacted_number">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>200</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
     </property>
    </widget>
   </widget>
@@ -490,30 +480,20 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTreeView" name="treeView_inspected_project">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>430</y>
-     <width>411</width>
-     <height>441</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QWidget" name="widget" native="true">
+  <widget class="QWidget" name="widget_btn_project" native="true">
    <property name="geometry">
     <rect>
      <x>470</x>
      <y>420</y>
      <width>541</width>
-     <height>71</height>
+     <height>61</height>
     </rect>
    </property>
    <widget class="QPushButton" name="btn_delete_inspected_project">
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>20</y>
+      <y>10</y>
       <width>111</width>
       <height>40</height>
      </rect>
@@ -532,7 +512,7 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
+      <y>10</y>
       <width>93</width>
       <height>40</height>
      </rect>
@@ -551,7 +531,7 @@
     <property name="geometry">
      <rect>
       <x>372</x>
-      <y>20</y>
+      <y>10</y>
       <width>101</width>
       <height>40</height>
      </rect>
@@ -566,6 +546,54 @@
      <string>检定模板管理</string>
     </property>
    </widget>
+  </widget>
+  <widget class="QWidget" name="widget_label" native="true">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>489</y>
+     <width>541</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <widget class="QLabel" name="label_selected_template">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>511</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>模板</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget_inspect_result">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>540</y>
+     <width>551</width>
+     <height>401</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTreeWidget" name="treeWidget_inpsected_project">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>420</y>
+     <width>431</width>
+     <height>521</height>
+    </rect>
+   </property>
+   <column>
+    <property name="text">
+     <string notr="true">1</string>
+    </property>
+   </column>
   </widget>
  </widget>
  <resources/>

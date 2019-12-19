@@ -32,8 +32,11 @@ public:
     /* 查询一个表中某一字段的所有记录 */
     void get_column_content(QString tab_name, QString col_name, QStringList* p_col_content);
 
-    /* 根据条件查询一个表中某一字段的记录 */
+    /* 根据条件查询一个表中的记录 */
     void get_table_content_by_condition(QString select_rule, QStringList* p_col_content);
+
+    /* 查询一个表中某些字段的所有记录 */
+    void get_columns_content(QString tab_name, QString cols_name, QStringList* p_col_content);
 
     /* 向数据库中加入一个table */
     void add_one_table(QString tab_name, QString columns);

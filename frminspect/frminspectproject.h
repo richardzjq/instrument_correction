@@ -24,6 +24,7 @@ private:
     DBInspect dbInspect_template_alternating_current;
     DBInspect dbInspect_template_direct_voltage;
     DBInspect dbInspect_template_alternating_voltage;
+    QString gpib_address;
 
 private slots:
     void initForm(void);

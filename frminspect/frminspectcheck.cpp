@@ -120,6 +120,8 @@ void frmInspectCheck::initForm(void)
     QList<QTreeWidgetItem *> rootList;
     rootList << root;
     ui->treeWidget_inpsected_project->insertTopLevelItems(0, rootList);
+
+    ui->treeWidget_inpsected_project->expandAll();
 }
 
 void frmInspectCheck::uninitForm(void)
@@ -247,4 +249,76 @@ void frmInspectCheck::on_btn_inspect_new_project_clicked()
     //this->hide();
     frmInspectProject *frm = new frmInspectProject;
     frm->show();
+}
+
+void frmInspectCheck::on_treeWidget_inpsected_project_itemClicked(QTreeWidgetItem *item, int column)
+{
+    /* 获取item text */
+    QString project_name = item->text(column);
+
+    /* 获取各项值 */
+    QString select_rule = QString("select * from 检定记录 where 检定记录编号 == '%1'").arg(project_name);
+    QStringList row_content;
+
+    dbInspect_record.get_table_content_by_condition(select_rule, &row_content);
+    QStringListIterator itr_row_content(row_content);
+
+    /* 只取第一行数据 */
+    QString line_content = itr_row_content.next().toLocal8Bit();
+
+    /* 检定记录编号 */
+    QString record_number = line_content.section(',', 0, 0);
+    ui->lineEdit_record_number->setText(record_number);
+
+    /* 送检单位 */
+    QString inspected_institution = line_content.section(',', 1, 1);
+    ui->comboBox_inspected_institution->setCurrentText(inspected_institution);
+
+    /* 仪器名称 */
+    QString sample_name = line_content.section(',', 2, 2);
+    ui->comboBox_sample_name->setCurrentText(sample_name);
+
+    /* 型号规格 */
+    QString model_specification = line_content.section(',', 3, 3);
+    ui->comboBox_model_specification->setCurrentText(model_specification);
+
+    /* 生产厂家 */
+    QString manufacture = line_content.section(',', 4, 4);
+    ui->comboBox_manufacture->setCurrentText(manufacture);
+
+    /* 出厂编号 */
+    QString manufacted_number = line_content.section(',', 5, 5);
+    ui->lineEdit_manufacted_number->setText(manufacted_number);
+
+    /* 检定日期 */
+    QString inspect_date = line_content.section(',', 6, 6);
+    ui->lineEdit_inspect_date->setText(inspect_date);
+
+    /* 检定员 */
+    QString inspector = line_content.section(',', 7, 7);
+    ui->comboBox_inspector->setCurrentText(inspector);
+
+    /* 检定结论 */
+    QString inspect_conclusion = line_content.section(',', 8, 8);
+    ui->comboBox_inspect_conclusion->setCurrentText(inspect_conclusion);
+
+    /* 核验员 */
+    QString verifier = line_content.section(',', 9, 9);
+    ui->comboBox_verifier->setCurrentText(verifier);
+
+    /* 温度 */
+    QString temperature = line_content.section(',', 10, 10);
+    ui->lineEdit_temperature->setText(temperature);
+
+    /* 湿度 */
+    QString humidity = line_content.section(',', 11, 11);
+    ui->lineEdit_humidity->setText(humidity);
+
+    /* 依据规程 */
+    QString refered_rule = line_content.section(',', 12, 12);
+    ui->comboBox_refered_rule->setCurrentText(refered_rule);
+
+    /* 模板 */
+    QString inpsect_template = line_content.section(',', 13, 13);
+    ui->comboBox_template->setCurrentText(inpsect_template);
 }

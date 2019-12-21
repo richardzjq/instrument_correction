@@ -7,12 +7,49 @@ frmInspectTemplate::frmInspectTemplate(QWidget *parent) :
 {
     ui->setupUi(this);
     this->initForm();
+    this->initData();
 }
 
 frmInspectTemplate::~frmInspectTemplate()
 {
     this->uninitForm();
     delete ui;
+}
+
+void frmInspectTemplate::initData(void)
+{
+    map_string_db.insert("直流电流", dbInspect_template_direct_current);
+    map_string_db.insert("直流电压", dbInspect_template_direct_voltage);
+    map_string_db.insert("交流电流", dbInspect_template_alternating_current);
+    map_string_db.insert("交流电压", dbInspect_template_alternating_voltage);
+    map_string_db.insert("电阻", dbInspect_template_resistance);
+    map_string_db.insert("电容", dbInspect_template_capacitance);
+
+    struct template_header template_header_current;
+    template_header_current.template_rang = "量程A";
+    template_header_current.template_standard_value = "标准值A";
+    template_header_current.template_standard_max_error = "允许误差%";
+    maps_template_header.insert("直流电流", template_header_current);
+    maps_template_header.insert("交流电流", template_header_current);
+
+    struct template_header template_header_voltage;
+    template_header_voltage.template_rang = "量程V";
+    template_header_voltage.template_standard_value = "标准值V";
+    template_header_voltage.template_standard_max_error = "允许误差%";
+    maps_template_header.insert("直流电压", template_header_voltage);
+    maps_template_header.insert("交流电压", template_header_voltage);
+
+    struct template_header template_header_resistance;
+    template_header_voltage.template_rang = "量程Ω";
+    template_header_voltage.template_standard_value = "标准值Ω";
+    template_header_voltage.template_standard_max_error = "允许误差%";
+    maps_template_header.insert("电阻", template_header_resistance);
+
+    struct template_header template_header_capacitance;
+    template_header_voltage.template_rang = "量程pf";
+    template_header_voltage.template_standard_value = "标准值pf";
+    template_header_voltage.template_standard_max_error = "允许误差%";
+    maps_template_header.insert("电容", template_header_capacitance);
 }
 
 void frmInspectTemplate::initForm(void)
@@ -185,6 +222,10 @@ void frmInspectTemplate::initForm(void)
     ui->treeWidget_template->insertTopLevelItems(0, rootList);
 
     ui->treeWidget_template->expandAll();
+
+    ui->btn_edit_line->setEnabled(false);
+    ui->btn_move_up->setEnabled(false);
+    ui->btn_move_down->setEnabled(false);
 }
 
 void frmInspectTemplate::uninitForm(void)
@@ -205,15 +246,88 @@ void frmInspectTemplate::on_btn_create_clicked()
     /* 获取模板类别 */
     QString template_type = ui->comboBox_type->currentText();
 
+    /* 在模板treeWidget加入一个节点 */
+    QList<QTreeWidgetItem *> rootList;
+    rootList = ui->treeWidget_template->findItems(template_type, nullptr, 0);
+    QTreeWidgetItem* root = rootList.at(0);
+    QTreeWidgetItem* leaf = new QTreeWidgetItem(root, QStringList(template_name));
+    root->addChild(leaf);
 
+    ui->treeWidget_template->expandAll();
+
+    /* 设置tableWidget的header */
+    QStringList strList;
+
+    strList << maps_template_header[template_type].template_rang << maps_template_header[template_type].template_standard_value << maps_template_header[template_type].template_standard_max_error;
+
+    ui->tableWidget_template->setWindowTitle(template_name);
+    ui->tableWidget_template->setColumnCount(3);
+
+    //将表头写入表格
+    ui->tableWidget_template->setHorizontalHeaderLabels(strList);
+    //自动调整宽度
+    ui->tableWidget_template->horizontalHeader()->setStretchLastSection(true);
+
+    ui->tableWidget_template->setRowCount(1);
 }
 
 void frmInspectTemplate::on_treeWidget_template_itemClicked(QTreeWidgetItem *item, int column)
 {
+    /* 获取当前item的父item */
+    QTreeWidgetItem * parent_item = item->parent();
+
     /* 先判断是不是root item， 如果是，什么是也不做，返回 */
+    if(nullptr == parent_item)
+        return;
 
     /* 获取item text */
-    QString project_name = item->text(column);
+    QString template_name = item->text(column);
+    QString template_type = parent_item->text(column);
 
-    /* 获取root */
+    ui->lineEdit_name->setText(template_name);
+    ui->comboBox_type->setCurrentText(template_type);
+
+    /* 获取模板数据库里的数据，显示在tableWidget中 */
+    /* 得到数据库 */
+    QStringList columns, table_content;
+    int columns_count;
+    DBInspect dbInspect_template;
+
+    dbInspect_template = map_string_db[template_type];
+    dbInspect_template.get_columns(template_name, &columns, &columns_count);
+    qDebug() << columns << columns_count;
+
+    ui->tableWidget_template->setWindowTitle(template_name);
+    ui->tableWidget_template->setColumnCount(columns_count);
+
+    //将表头写入表格
+    ui->tableWidget_template->setHorizontalHeaderLabels(columns);
+    //自动调整宽度
+    ui->tableWidget_template->horizontalHeader()->setStretchLastSection(true);
+
+    dbInspect_template.get_table_content(template_name, &table_content);
+    ui->tableWidget_template->setRowCount(table_content.count());
+
+    QStringListIterator itr_table_content(table_content);
+
+    int row_inc = 0, columm_inc = 0;
+    while(itr_table_content.hasNext())
+    {
+        QString line_content = itr_table_content.next().toLocal8Bit();
+        qDebug() << __FUNCTION__ << line_content;
+
+        for(columm_inc = 0; columm_inc < columns_count; columm_inc++)
+        {
+            ui->tableWidget_template->setItem(row_inc, columm_inc, new QTableWidgetItem(line_content.section(',', columm_inc, columm_inc)));
+            qDebug() << __FUNCTION__ << row_inc << columm_inc << line_content.section(',', columm_inc, columm_inc);
+        }
+
+        row_inc++;
+    }
+
+}
+
+void frmInspectTemplate::on_btn_save_clicked()
+{
+    /* 保存treeWidget的内容到数据库 */
 }

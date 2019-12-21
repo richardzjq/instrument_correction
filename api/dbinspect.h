@@ -1,14 +1,10 @@
 ﻿#ifndef DBINSPECT_H
 #define DBINSPECT_H
 
-#include "quiwidget.h"
-#include "buttondefence.h"
-
-class DBInspect : public QObject
+class DBInspect
 {
-    Q_OBJECT
 public:
-    explicit DBInspect(QObject *parent = 0);
+    explicit DBInspect();
     ~DBInspect();
 
     /* 打开数据库 */
@@ -53,5 +49,8 @@ private:
 
 
 };
+
+//自定义一个map类型，值为DBInspectMap对象
+typedef QMap<QString, DBInspect> DBInspectMap;
 
 #endif // DBINSPECT_H

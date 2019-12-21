@@ -24,9 +24,11 @@ private:
     DBInspect dbInspect_template_alternating_current;
     DBInspect dbInspect_template_direct_voltage;
     DBInspect dbInspect_template_alternating_voltage;
+    DBInspectMap map_string_db;
     QString gpib_address;
 
 private slots:
+    void initData(void);
     void initForm(void);
     void uninitForm(void);
     void on_comboBox_template_type_currentIndexChanged(const QString &arg1);

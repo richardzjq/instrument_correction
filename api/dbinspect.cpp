@@ -4,7 +4,7 @@
 
 #define loadfromdb true
 
-DBInspect::DBInspect(QObject *parent) : QObject(parent)
+DBInspect::DBInspect()
 {
     m_db = nullptr;
 }

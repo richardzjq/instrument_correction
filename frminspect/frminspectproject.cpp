@@ -7,12 +7,23 @@ frmInspectProject::frmInspectProject(QWidget *parent) :
 {
     ui->setupUi(this);
     this->initForm();
+    this->initData();
 }
 
 frmInspectProject::~frmInspectProject()
 {
     this->uninitForm();
     delete ui;
+}
+
+void frmInspectProject::initData(void)
+{
+    map_string_db.insert("直流电流", dbInspect_template_direct_current);
+    map_string_db.insert("直流电压", dbInspect_template_direct_voltage);
+    map_string_db.insert("交流电流", dbInspect_template_alternating_current);
+    map_string_db.insert("交流电压", dbInspect_template_alternating_voltage);
+    map_string_db.insert("电阻", dbInspect_template_resistance);
+    map_string_db.insert("电容", dbInspect_template_capacitance);
 }
 
 void frmInspectProject::initForm(void)
@@ -125,35 +136,10 @@ void frmInspectProject::on_comboBox_template_type_currentIndexChanged(const QStr
     int tables_count;
 
     /* 设置模板comb */
-    if(0 == arg1.compare("电容"))
-    {
-        dbInspect_template_resistance.get_tables(&tables, &tables_count);
-    }
+    DBInspect dbInspect_template;
 
-    if(0 == arg1.compare("电阻"))
-    {
-        dbInspect_template_capacitance.get_tables(&tables, &tables_count);
-    }
-
-    if(0 == arg1.compare("直流电流"))
-    {
-        dbInspect_template_direct_current.get_tables(&tables, &tables_count);
-    }
-
-    if(0 == arg1.compare("直流电压"))
-    {
-        dbInspect_template_direct_voltage.get_tables(&tables, &tables_count);
-    }
-
-    if(0 == arg1.compare("交流电流"))
-    {
-        dbInspect_template_alternating_current.get_tables(&tables, &tables_count);
-    }
-
-    if(0 == arg1.compare("交流电压"))
-    {
-        dbInspect_template_alternating_voltage.get_tables(&tables, &tables_count);
-    }
+    dbInspect_template = map_string_db[arg1];
+    dbInspect_template.get_tables(&tables, &tables_count);
 
     ui->comboBox_template_name->addItems(tables);
 }
@@ -165,35 +151,10 @@ void frmInspectProject::on_comboBox_template_name_currentIndexChanged(const QStr
     QString  template_type = ui->comboBox_template_type->currentText();
 
     /* 查询一个表中的所有记录 */
-    if(0 == template_type.compare("电容"))
-    {
-        dbInspect_template_resistance.get_table_content(arg1, &table_content);
-    }
+    DBInspect dbInspect_template;
 
-    if(0 == template_type.compare("电阻"))
-    {
-        dbInspect_template_capacitance.get_table_content(arg1, &table_content);
-    }
-
-    if(0 == template_type.compare("直流电流"))
-    {
-        dbInspect_template_direct_current.get_table_content(arg1, &table_content);
-    }
-
-    if(0 == template_type.compare("直流电压"))
-    {
-        dbInspect_template_direct_voltage.get_table_content(arg1, &table_content);
-    }
-
-    if(0 == template_type.compare("交流电流"))
-    {
-        dbInspect_template_alternating_current.get_table_content(arg1, &table_content);
-    }
-
-    if(0 == template_type.compare("交流电压"))
-    {
-        dbInspect_template_alternating_voltage.get_table_content(arg1, &table_content);
-    }
+    dbInspect_template = map_string_db[template_type];
+    dbInspect_template.get_table_content(arg1, &table_content);
 
     QStringListIterator itr_table_content(table_content);
 

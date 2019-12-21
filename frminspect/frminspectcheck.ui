@@ -19,7 +19,7 @@
      <x>10</x>
      <y>80</y>
      <width>1311</width>
-     <height>251</height>
+     <height>261</height>
     </rect>
    </property>
    <widget class="QLabel" name="label_inspected_date">
@@ -108,7 +108,7 @@
     <property name="geometry">
      <rect>
       <x>1090</x>
-      <y>30</y>
+      <y>20</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -118,7 +118,7 @@
     <property name="geometry">
      <rect>
       <x>1000</x>
-      <y>30</y>
+      <y>20</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -202,7 +202,7 @@
       <x>1090</x>
       <y>140</y>
       <width>121</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
    </widget>
@@ -331,7 +331,7 @@
     <property name="geometry">
      <rect>
       <x>1090</x>
-      <y>190</y>
+      <y>200</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -341,7 +341,7 @@
     <property name="geometry">
      <rect>
       <x>1000</x>
-      <y>190</y>
+      <y>200</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -484,7 +484,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>170</y>
+     <y>160</y>
      <width>71</width>
      <height>31</height>
     </rect>
@@ -497,7 +497,7 @@
    <property name="geometry">
     <rect>
      <x>120</x>
-     <y>170</y>
+     <y>160</y>
      <width>151</width>
      <height>41</height>
     </rect>

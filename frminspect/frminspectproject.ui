@@ -19,14 +19,14 @@
      <x>20</x>
      <y>10</y>
      <width>1001</width>
-     <height>80</height>
+     <height>61</height>
     </rect>
    </property>
    <widget class="QPushButton" name="btn_gpib_disconnect">
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>20</y>
+      <y>10</y>
       <width>93</width>
       <height>40</height>
      </rect>
@@ -45,7 +45,7 @@
     <property name="geometry">
      <rect>
       <x>320</x>
-      <y>20</y>
+      <y>10</y>
       <width>93</width>
       <height>40</height>
      </rect>
@@ -64,7 +64,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>20</y>
+      <y>10</y>
       <width>93</width>
       <height>40</height>
      </rect>
@@ -83,7 +83,7 @@
     <property name="geometry">
      <rect>
       <x>790</x>
-      <y>20</y>
+      <y>10</y>
       <width>93</width>
       <height>40</height>
      </rect>
@@ -126,7 +126,7 @@
    <property name="geometry">
     <rect>
      <x>550</x>
-     <y>100</y>
+     <y>90</y>
      <width>71</width>
      <height>31</height>
     </rect>
@@ -172,7 +172,7 @@
    <property name="geometry">
     <rect>
      <x>640</x>
-     <y>100</y>
+     <y>90</y>
      <width>381</width>
      <height>41</height>
     </rect>

@@ -28,6 +28,8 @@ private:
 private slots:
     void initForm(void);
     void uninitForm(void);
+    void on_btn_create_clicked();
+    void on_treeWidget_template_itemClicked(QTreeWidgetItem *item, int column);
 };
 
 #endif // FRMINSPECTTEMPLATE_H

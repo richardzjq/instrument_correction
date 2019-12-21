@@ -37,10 +37,6 @@ private slots:
     void on_btnDelete_clicked();
     void on_btnReturn_clicked();
     void on_btnClear_clicked();
-    void on_btnExcel_clicked();
-    void on_btnPrint_clicked();
-    void on_btnInput_clicked();
-    void on_btnOutput_clicked();
 };
 
 #endif // FRMCONFIGUSER_H

@@ -166,32 +166,50 @@ void frmInspectMain::refresh_record_table(void)
     {
         if(0 != inspected_institution.compare("全部"))
         {
-            select_rule_condition = QString("送检单位 == '%1'").arg(inspected_institution);
+            if(true == select_rule_condition.isEmpty())
+                select_rule_condition = QString("送检单位 == '%1'").arg(inspected_institution);
+            else
+                select_rule_condition = select_rule_condition + QString(" and 送检单位 == '%1'").arg(inspected_institution);
         }
 
         if(0 != inspected_date.compare("全部"))
         {
-            select_rule_condition = select_rule_condition + QString(" and 检定日期 == '%1'").arg(inspected_date);
+            if(true == select_rule_condition.isEmpty())
+                select_rule_condition = QString("检定日期 == '%1'").arg(inspected_date);
+            else
+                select_rule_condition = select_rule_condition + QString(" and 检定日期 == '%1'").arg(inspected_date);
         }
 
         if(0 != inspect_conclusion.compare("全部"))
         {
-            select_rule_condition = select_rule_condition + QString(" and 检定结论 == '%1'").arg(inspect_conclusion);
+            if(true == select_rule_condition.isEmpty())
+                select_rule_condition = QString("检定结论 == '%1'").arg(inspect_conclusion);
+            else
+                select_rule_condition = select_rule_condition + QString(" and 检定结论 == '%1'").arg(inspect_conclusion);
         }
 
         if(0 != sample_name.compare("全部"))
         {
-            select_rule_condition = select_rule_condition + QString(" and 仪器名称 == '%1'").arg(sample_name);
+            if(true == select_rule_condition.isEmpty())
+                select_rule_condition = QString("仪器名称 == '%1'").arg(sample_name);
+            else
+                select_rule_condition = select_rule_condition + QString(" and 仪器名称 == '%1'").arg(sample_name);
         }
 
         if(0 != sample_specification.compare("全部"))
         {
-            select_rule_condition = select_rule_condition + QString(" and 型号规格 == '%1'").arg(sample_specification);
+            if(true == select_rule_condition.isEmpty())
+                select_rule_condition = QString("型号规格 == '%1'").arg(sample_specification);
+            else
+                select_rule_condition = select_rule_condition + QString(" and 型号规格 == '%1'").arg(sample_specification);
         }
 
         if(0 != inspector.compare("全部"))
         {
-            select_rule_condition = select_rule_condition + QString(" and 检定员 == '%1'").arg(inspector);
+            if(true == select_rule_condition.isEmpty())
+                select_rule_condition = QString("检定员 == '%1'").arg(inspector);
+            else
+                select_rule_condition = select_rule_condition + QString(" and 检定员 == '%1'").arg(inspector);
         }
 
         select_rule = "select * from " + record_table_name + " where " + select_rule_condition;

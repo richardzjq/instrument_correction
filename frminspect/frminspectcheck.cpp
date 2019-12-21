@@ -95,6 +95,7 @@ void frmInspectCheck::initForm(void)
         qDebug() << __FUNCTION__ << "Open databas fail!";
     }
 
+    /* 设置treeWidget */
     ui->treeWidget_inpsected_project->setColumnCount(1);
 
     strList.clear();
@@ -122,6 +123,19 @@ void frmInspectCheck::initForm(void)
     ui->treeWidget_inpsected_project->insertTopLevelItems(0, rootList);
 
     ui->treeWidget_inpsected_project->expandAll();
+
+    /* 设置tableWidget */
+    /* 获得第一张表中的column和数量 */
+    QStringList columns;
+    columns << "量程" << "标准值(+)" << "标准值(+)" << "误差%" << "标准值(-)" << "标准值(-)" << "误差%";
+
+    ui->tableWidget_inspect_result->setWindowTitle("检定模板和结果");
+    ui->tableWidget_inspect_result->setColumnCount(7);
+
+    //将表头写入表格
+    ui->tableWidget_inspect_result->setHorizontalHeaderLabels(columns);
+    //自动调整宽度
+    ui->tableWidget_inspect_result->horizontalHeader()->setStretchLastSection(true);
 }
 
 void frmInspectCheck::uninitForm(void)

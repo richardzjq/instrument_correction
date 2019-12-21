@@ -196,3 +196,24 @@ void frmInspectTemplate::uninitForm(void)
     dbInspect_template_alternating_current.close_database();
     dbInspect_template_alternating_voltage.close_database();
 }
+
+void frmInspectTemplate::on_btn_create_clicked()
+{
+    /* 获取模板名称 */
+    QString template_name = ui->lineEdit_name->text();
+
+    /* 获取模板类别 */
+    QString template_type = ui->comboBox_type->currentText();
+
+
+}
+
+void frmInspectTemplate::on_treeWidget_template_itemClicked(QTreeWidgetItem *item, int column)
+{
+    /* 先判断是不是root item， 如果是，什么是也不做，返回 */
+
+    /* 获取item text */
+    QString project_name = item->text(column);
+
+    /* 获取root */
+}

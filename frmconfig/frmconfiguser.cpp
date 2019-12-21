@@ -146,23 +146,3 @@ void frmConfigUser::on_btnClear_clicked()
 {
 
 }
-
-void frmConfigUser::on_btnExcel_clicked()
-{
-
-}
-
-void frmConfigUser::on_btnPrint_clicked()
-{
-
-}
-
-void frmConfigUser::on_btnInput_clicked()
-{
-
-}
-
-void frmConfigUser::on_btnOutput_clicked()
-{
-
-}

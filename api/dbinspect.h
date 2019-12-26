@@ -37,6 +37,9 @@ public:
     /* 向数据库中加入一个table */
     void add_one_table(QString tab_name, QString columns);
 
+    /* 从数据库中删除一个table */
+    void delete_one_table(QString tab_name);
+
     /* 向数据库table加入一行内容 */
     void add_one_line_into_table(QString add_line_instruction);
 
@@ -46,8 +49,6 @@ public:
 private:
 
     QSqlDatabase* m_db;
-
-
 };
 
 //自定义一个map类型，值为DBInspectMap对象

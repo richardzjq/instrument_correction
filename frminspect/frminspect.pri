@@ -10,7 +10,8 @@ HEADERS += \
     $$PWD/frminspectcheck.h \
     $$PWD/frminspectmain.h \
     $$PWD/frminspecttemplate.h \
-    $$PWD/frminspectproject.h
+    $$PWD/frminspectproject.h \
+    $$PWD/inspect_db_global.h
 
 SOURCES += \
     $$PWD/frminspectmain.cpp \

@@ -3,7 +3,9 @@
 #include "frminspecttemplate.h"
 #include "ui_frminspectcheck.h"
 #include "gpibctl.h"
+#include "inspect_db_global.h"
 #include "wordapi.h"
+#include "freetreewidget.h"
 #include <QDateTime>
 #include<QDir>
 #include<QDebug>
@@ -78,22 +80,7 @@ void frmInspectCheck::initForm(void)
 
     strList.clear();
     strList << "" << "数字式万用表200-200M" << "数字式万用表2n-200u" << "数字式万用表2mA-20A";
-    ui->comboBox_template->addItems(strList);
-
-    /* 打开数据库 */
-    bool open_record_db;
-    const QString filePath = QCoreApplication::applicationDirPath();
-    QString fileName_db_record = filePath + "/db/inspect_record.db";
-
-    open_record_db = dbInspect_record.open_database(fileName_db_record);
-
-    if(open_record_db == false)
-    {
-        /* 关闭数据库 */
-        dbInspect_record.close_database();
-
-        qDebug() << __FUNCTION__ << "Open databas fail!";
-    }
+    ui->comboBox_template->addItems(strList);    
 
     /* 设置treeWidget */
     ui->treeWidget_inpsected_project->setColumnCount(1);
@@ -127,10 +114,10 @@ void frmInspectCheck::initForm(void)
     /* 设置tableWidget */
     /* 获得第一张表中的column和数量 */
     QStringList columns;
-    columns << "量程" << "标准值(+)" << "标准值(+)" << "误差%" << "标准值(-)" << "标准值(-)" << "误差%";
+    columns << "量程" << "标准值" << "显示值" << "误差%";
 
     ui->tableWidget_inspect_result->setWindowTitle("检定模板和结果");
-    ui->tableWidget_inspect_result->setColumnCount(7);
+    ui->tableWidget_inspect_result->setColumnCount(4);
 
     //将表头写入表格
     ui->tableWidget_inspect_result->setHorizontalHeaderLabels(columns);
@@ -140,7 +127,8 @@ void frmInspectCheck::initForm(void)
 
 void frmInspectCheck::uninitForm(void)
 {
-    dbInspect_record.close_database();
+    QTreeWidgetItem* root = ui->treeWidget_inpsected_project->topLevelItem(0);
+    freeTreeWidget(root);
 }
 
 void frmInspectCheck::clearForm()
@@ -223,10 +211,8 @@ void frmInspectCheck::on_btn_save_clicked()
     QString inpsect_template = ui->comboBox_template->currentText();
 
     /* 记录写入数据库 */
-    QString add_line_instruction = "INSERT INTO 检定记录 (检定记录编号, 送检单位, 仪器名称, 型号规格, 生产厂家, 出厂编号, 检定日期, 检定员, 检定结论, 核验员, 环境温度, 相对湿度, 依据规程, 检定模板) VALUES ("
-                                   + record_number + ", " + inspected_institution  + ", " + sample_name + ", " + model_specification + ", " +  manufacture + ", " + manufacted_number+ ", "
-                                   + inspect_date + ", " + inspector + ", " + inspect_conclusion + ", " + verifier + ", " + temperature + ", " + humidity + ", " + refered_rule + ", " + inpsect_template + ")";
-
+    QString add_line_instruction = QString("insert into 检定记录 (检定记录编号, 送检单位, 仪器名称, 型号规格, 生产厂家, 出厂编号, 检定日期, 检定员, 检定结论, 核验员, 环境温度, 相对湿度, 依据规程, 检定模板) VALUES ('%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8', '%9', '%10', '%11', '%12', '%13', '%14')")
+                                                                .arg(record_number).arg(inspected_institution).arg(sample_name).arg(model_specification).arg(manufacture).arg(manufacted_number).arg(inspect_date).arg(inspector).arg(inspect_conclusion).arg(verifier).arg(temperature).arg(humidity).arg(refered_rule).arg(inpsect_template);
     dbInspect_record.add_one_line_into_table(add_line_instruction);
 
     /* 已检定项目TreeWidget加入一项 */
@@ -239,10 +225,16 @@ void frmInspectCheck::on_btn_save_clicked()
 
 void frmInspectCheck::on_btn_delete_inspected_project_clicked()
 {
+    /* 获得当root节点 */
+    QTreeWidgetItem* root = ui->treeWidget_inpsected_project->topLevelItem(0);
     /* 获得当前节点 */
     QTreeWidgetItem* item= ui->treeWidget_inpsected_project->currentItem();
     /* 删除 */
-    ui->treeWidget_inpsected_project->removeItemWidget(item, 0);
+    root->removeChild(item);
+    /* 释放item占用的内存 */
+    delete item;
+
+    ui->treeWidget_inpsected_project->expandAll();
 
     /* 从数据库中删除该行 */
     QString delete_line_instruction = QString("DELETE FROM 检定记录 WHERE 检定记录编号 == '%1'").arg(ui->treeWidget_inpsected_project->currentItem()->text(0));
@@ -262,6 +254,7 @@ void frmInspectCheck::on_btn_inspect_new_project_clicked()
 {
     //this->hide();
     frmInspectProject *frm = new frmInspectProject;
+    frm->getData(ui->lineEdit_record_number->text());
     frm->show();
 }
 
@@ -335,4 +328,39 @@ void frmInspectCheck::on_treeWidget_inpsected_project_itemClicked(QTreeWidgetIte
     /* 模板 */
     QString inpsect_template = line_content.section(',', 13, 13);
     ui->comboBox_template->setCurrentText(inpsect_template);
+
+    /* tableWidget的内容展示 */
+    /* 得到数据库 */
+    QStringList columns, table_content;
+    int columns_count;
+    dbInspect_inspect_data_record.get_columns(record_number, &columns, &columns_count);
+    qDebug() << columns << columns_count;
+
+    ui->tableWidget_inspect_result->setWindowTitle(record_number);
+    ui->tableWidget_inspect_result->setColumnCount(columns_count);
+
+    //将表头写入表格
+    ui->tableWidget_inspect_result->setHorizontalHeaderLabels(columns);
+    //自动调整宽度
+    ui->tableWidget_inspect_result->horizontalHeader()->setStretchLastSection(true);
+
+    dbInspect_inspect_data_record.get_table_content(record_number, &table_content);
+    ui->tableWidget_inspect_result->setRowCount(table_content.count());
+
+    QStringListIterator itr_table_content(table_content);
+
+    int row_inc = 0, columm_inc = 0;
+    while(itr_table_content.hasNext())
+    {
+        QString line_content = itr_table_content.next().toLocal8Bit();
+        qDebug() << __FUNCTION__ << line_content;
+
+        for(columm_inc = 0; columm_inc < columns_count; columm_inc++)
+        {
+            ui->tableWidget_inspect_result->setItem(row_inc, columm_inc, new QTableWidgetItem(line_content.section(',', columm_inc, columm_inc)));
+            //qDebug() << __FUNCTION__ << row_inc << columm_inc << line_content.section(',', columm_inc, columm_inc);
+        }
+
+        row_inc++;
+    }
 }

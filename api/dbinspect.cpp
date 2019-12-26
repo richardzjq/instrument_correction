@@ -354,6 +354,29 @@ void DBInspect::add_one_table(QString tab_name, QString columns)
 	}
 }
 
+/* 从数据库中删除一个table */
+void DBInspect::delete_one_table(QString tab_name)
+{
+    if(nullptr == m_db)
+    {
+        qDebug() <<"database is not set!";
+        return ;
+    }
+
+    QSqlQuery query(*m_db);
+    QString str = "drop table " + tab_name;
+    //qDebug() << __FUNCTION__ << *m_db;
+    //qDebug() << str;
+    query.prepare(str);
+
+    qDebug() << str;
+
+    if (!query.exec())
+    {
+        qDebug() << query.lastError();
+    }
+}
+
 /* 向数据库table加入一行内容 */
 void DBInspect::add_one_line_into_table(QString add_line_instruction)
 {

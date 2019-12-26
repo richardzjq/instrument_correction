@@ -186,7 +186,7 @@ void inspect_follow_schem(QString schem_db_name, QString instrument_db_name)
 	    }
 
     }
-	
+
     /* 关闭数据库 */
     dbInspect_schem.close_database();
     dbInspect_result.close_database();

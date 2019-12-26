@@ -25,25 +25,6 @@
    <widget class="QPushButton" name="btn_gpib_disconnect">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>10</y>
-      <width>93</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="text">
-     <string>GPIB断开</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_inspect_mode">
-    <property name="geometry">
-     <rect>
       <x>320</x>
       <y>10</y>
       <width>93</width>
@@ -57,10 +38,10 @@
      </sizepolicy>
     </property>
     <property name="text">
-     <string>检定模式</string>
+     <string>断开GPIB</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_debug_mode">
+   <widget class="QPushButton" name="btn_inspect_mode">
     <property name="geometry">
      <rect>
       <x>550</x>
@@ -76,7 +57,26 @@
      </sizepolicy>
     </property>
     <property name="text">
-     <string>调试模式</string>
+     <string>检定模式</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_gpib_connect">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>10</y>
+      <width>93</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="text">
+     <string>连接GPIB</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_save">

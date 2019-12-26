@@ -5,7 +5,6 @@
 
 #include "frmlogout.h"
 #include "frminspectmain.h"
-#include "frminspectcheck.h"
 #include "frmconfig.h"
 #include "frmabout.h"
 
@@ -101,9 +100,6 @@ void frmMain::initNav()
     frmInspectMain *inspectMain = new frmInspectMain;
     ui->stackedWidget->addWidget(inspectMain);
 
-    frmInspectCheck *inspectCheck = new frmInspectCheck;
-    ui->stackedWidget->addWidget(inspectCheck);
-
     frmConfig *config = new frmConfig;
     ui->stackedWidget->addWidget(config);
 
@@ -114,8 +110,8 @@ void frmMain::initNav()
 
     QList<QString> texts;
 
-    btns << ui->btn_main << ui->btn_inspect << ui->btn_config;
-    texts << "主界面" << "检定" << "系统设置";
+    btns << ui->btn_main << ui->btn_config;
+    texts << "主界面" << "系统设置";
 
     for (int i = 0; i < btns.count(); i++) {
         QPushButton *btn = (QPushButton *)btns.at(i);
@@ -155,7 +151,6 @@ void frmMain::initIcon()
     }
 
     //从图形字体库中设置图标
-    ui->btn_inspect->setIcon(IconHelper::Instance()->getPixmap(QUIConfig::TextColor, 0xf042, 20, 20, 20));
     ui->btn_main->setIcon(IconHelper::Instance()->getPixmap(QUIConfig::TextColor, 0xf002, 20, 20, 20));
     ui->btn_config->setIcon(IconHelper::Instance()->getPixmap(QUIConfig::TextColor, 0xf085, 20, 20, 20));
 }
@@ -173,10 +168,8 @@ void frmMain::buttonClicked()
 
     if (btn == ui->btn_main) {
         ui->stackedWidget->setCurrentIndex(0);
-    } else if (btn == ui->btn_inspect) {
-        ui->stackedWidget->setCurrentIndex(1);
     } else if (btn == ui->btn_config) {
-        ui->stackedWidget->setCurrentIndex(2);
+        ui->stackedWidget->setCurrentIndex(1);
     }
 
     App::writeConfig();

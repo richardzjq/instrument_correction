@@ -2,7 +2,6 @@
 #define FRMINSPECTCHECK_H
 
 #include <QWidget>
-#include "dbinspect.h"
 
 namespace Ui {
 class frmInspectCheck;
@@ -19,7 +18,6 @@ public:
 
 private:
     Ui::frmInspectCheck *ui;
-    DBInspect dbInspect_record;
     QString record_table_name;
     int columns_count;
 

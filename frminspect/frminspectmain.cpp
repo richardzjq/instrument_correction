@@ -1,5 +1,18 @@
 ﻿#include "frminspectmain.h"
 #include "ui_frminspectmain.h"
+#include "inspect_db_global.h"
+#include "frminspectcheck.h"
+
+/* 所有的数据库在inspect main中打开，关闭 */
+DBInspect dbInspect_record;
+DBInspect dbInspect_inspect_data_record;
+
+DBInspect dbInspect_template_resistance;
+DBInspect dbInspect_template_capacitance;
+DBInspect dbInspect_template_direct_current;
+DBInspect dbInspect_template_alternating_current;
+DBInspect dbInspect_template_direct_voltage;
+DBInspect dbInspect_template_alternating_voltage;
 
 
 frmInspectMain::frmInspectMain(QWidget *parent) :
@@ -7,13 +20,14 @@ frmInspectMain::frmInspectMain(QWidget *parent) :
     ui(new Ui::frmInspectMain)
 {
     ui->setupUi(this);
-
+    this->initData();
     this->initForm();
 }
 
 frmInspectMain::~frmInspectMain()
 {
     this->uninitForm();
+    this->uninitData();
     delete ui;
 }
 
@@ -52,21 +66,6 @@ void frmInspectMain::initForm(void)
 {
     QStringList tables;
     int tables_count;
-
-    /* 打开数据库 */
-    bool open_record_db;
-    const QString filePath = QCoreApplication::applicationDirPath();
-    QString fileName_db_record = filePath + "/db/inspect_record.db";
-
-    open_record_db = dbInspect_record.open_database(fileName_db_record);
-
-    if(open_record_db == false)
-    {
-        /* 关闭数据库 */
-        dbInspect_record.close_database();
-
-        qDebug() << __FUNCTION__ << "Open databas fail!";
-    }
 
     /* 获得检定记录数据库文件中的table和数量 */
     dbInspect_record.get_tables(&tables, &tables_count);
@@ -141,7 +140,96 @@ void frmInspectMain::uninitForm(void)
 
 void frmInspectMain::initData(void)
 {
+    /* 在此打开所有数据库文件 */
+    bool open_db;
+    const QString filePath = QCoreApplication::applicationDirPath();
+    QString fileName_db = filePath + "/db/inspect_record.db";
 
+    open_db = dbInspect_record.open_database(fileName_db);
+
+    if(open_db == false)
+    {
+        /* 关闭数据库 */
+        dbInspect_record.close_database();
+
+        qDebug() << __FUNCTION__ << "Open databas fail!";
+    }
+
+    fileName_db = filePath + "/db/inspect_data.db";
+    open_db = dbInspect_inspect_data_record.open_database(fileName_db);
+    if(open_db == false)
+    {
+        /* 关闭数据库 */
+        dbInspect_inspect_data_record.close_database();
+        qDebug() << __FUNCTION__ << "Open databas fail!";
+    }
+
+    fileName_db = filePath + "/db/inpsect_template/电容.db";
+    open_db = dbInspect_template_resistance.open_database(fileName_db);
+    if(open_db == false)
+    {
+        /* 关闭数据库 */
+        dbInspect_template_resistance.close_database();
+        qDebug() << __FUNCTION__ << "Open databas fail!";
+    }
+
+    fileName_db = filePath + "/db/inpsect_template/电阻.db";
+    open_db = dbInspect_template_capacitance.open_database(fileName_db);
+    if(open_db == false)
+    {
+        /* 关闭数据库 */
+        dbInspect_template_capacitance.close_database();
+        qDebug() << __FUNCTION__ << "Open databas fail!";
+    }
+
+    fileName_db = filePath + "/db/inpsect_template/直流电流.db";
+    open_db = dbInspect_template_direct_current.open_database(fileName_db);
+    if(open_db == false)
+    {
+        /* 关闭数据库 */
+        dbInspect_template_direct_current.close_database();
+        qDebug() << __FUNCTION__ << "Open databas fail!";
+    }
+
+    fileName_db = filePath + "/db/inpsect_template/直流电压.db";
+    open_db = dbInspect_template_direct_voltage.open_database(fileName_db);
+    if(open_db == false)
+    {
+        /* 关闭数据库 */
+        dbInspect_template_direct_voltage.close_database();
+        qDebug() << __FUNCTION__ << "Open databas fail!";
+    }
+
+    fileName_db = filePath + "/db/inpsect_template/交流电流.db";
+    open_db = dbInspect_template_alternating_current.open_database(fileName_db);
+    if(open_db == false)
+    {
+        /* 关闭数据库 */
+        dbInspect_template_alternating_current.close_database();
+        qDebug() << __FUNCTION__ << "Open databas fail!";
+    }
+
+    fileName_db = filePath + "/db/inpsect_template/交流电压.db";
+    open_db = dbInspect_template_alternating_voltage.open_database(fileName_db);
+    if(open_db == false)
+    {
+        /* 关闭数据库 */
+        dbInspect_template_alternating_voltage.close_database();
+        qDebug() << __FUNCTION__ << "Open databas fail!";
+    }
+}
+
+void frmInspectMain::uninitData(void)
+{
+    dbInspect_template_resistance.close_database();
+    dbInspect_template_capacitance.close_database();
+    dbInspect_template_direct_current.close_database();
+    dbInspect_template_direct_voltage.close_database();
+    dbInspect_template_alternating_current.close_database();
+    dbInspect_template_alternating_voltage.close_database();
+
+    dbInspect_record.close_database();
+    dbInspect_inspect_data_record.close_database();
 }
 
 /* 根据筛选条件，刷新检定显示的记录表 */
@@ -233,7 +321,7 @@ void frmInspectMain::refresh_record_table(void)
         for(columm_inc = 0; columm_inc < columns_count; columm_inc++)
         {
             ui->tableWidget_record->setItem(row_inc, columm_inc, new QTableWidgetItem(line_content.section(',', columm_inc, columm_inc)));
-            qDebug() << __FUNCTION__ << row_inc << columm_inc << line_content.section(',', columm_inc, columm_inc);
+            //qDebug() << __FUNCTION__ << row_inc << columm_inc << line_content.section(',', columm_inc, columm_inc);
         }
 
         row_inc++;
@@ -268,4 +356,11 @@ void frmInspectMain::on_comboBox_sample_specification_currentIndexChanged(const 
 void frmInspectMain::on_comboBox_inspector_currentIndexChanged(const QString &arg1)
 {
     refresh_record_table();
+}
+
+void frmInspectMain::on_btn_new_inspect_clicked()
+{
+    //this->hide();
+    frmInspectCheck *frm = new frmInspectCheck;
+    frm->show();
 }

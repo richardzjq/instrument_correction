@@ -13,7 +13,8 @@ HEADERS += \
     $$PWD/quiwidget.h \
     $$PWD/savelog.h \
     $$PWD/soundapi.h \
-    $$PWD/appevent.h
+    $$PWD/appevent.h \
+    $$PWD/freetreewidget.h
 
 SOURCES += \
     $$PWD/api.cpp \
@@ -30,4 +31,5 @@ SOURCES += \
     $$PWD/quiwidget.cpp \
     $$PWD/savelog.cpp \
     $$PWD/soundapi.cpp \
-    $$PWD/appevent.cpp
+    $$PWD/appevent.cpp \
+    $$PWD/freetreewidget.cpp

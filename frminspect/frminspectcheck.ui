@@ -559,7 +559,7 @@
    <widget class="QPushButton" name="btn_inspect_new_project">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>230</x>
       <y>20</y>
       <width>93</width>
       <height>40</height>

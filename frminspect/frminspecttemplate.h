@@ -24,12 +24,6 @@ public:
 
 private:
     Ui::frmInspectTemplate *ui;
-    DBInspect dbInspect_template_resistance;
-    DBInspect dbInspect_template_capacitance;
-    DBInspect dbInspect_template_direct_current;
-    DBInspect dbInspect_template_alternating_current;
-    DBInspect dbInspect_template_direct_voltage;
-    DBInspect dbInspect_template_alternating_voltage;
     DBInspectMap map_string_db;
     QMap<QString, template_header> maps_template_header;
 
@@ -40,6 +34,8 @@ private slots:
     void on_btn_create_clicked();
     void on_treeWidget_template_itemClicked(QTreeWidgetItem *item, int column);
     void on_btn_save_clicked();
+    void on_btn_add_line_clicked();
+    void on_btn_delete_line_clicked();
 };
 
 #endif // FRMINSPECTTEMPLATE_H

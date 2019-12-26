@@ -1,13 +1,15 @@
 ﻿#include "frminspecttemplate.h"
 #include "ui_frminspecttemplate.h"
+#include "inspect_db_global.h"
+#include "freetreewidget.h"
 
 frmInspectTemplate::frmInspectTemplate(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::frmInspectTemplate)
 {
     ui->setupUi(this);
-    this->initForm();
     this->initData();
+    this->initForm();
 }
 
 frmInspectTemplate::~frmInspectTemplate()
@@ -67,65 +69,6 @@ void frmInspectTemplate::initForm(void)
     ui->radioButton_adjust_output->setChecked(false);
 
     ui->checkBox_other_setting->setChecked(false);
-
-    /* 打开数据库 */
-    bool open_db;
-    const QString filePath = QCoreApplication::applicationDirPath();
-    QString fileName_db;
-
-    fileName_db = filePath + "/db/inpsect_template/电容.db";
-    open_db = dbInspect_template_resistance.open_database(fileName_db);
-    if(open_db == false)
-    {
-        /* 关闭数据库 */
-        dbInspect_template_resistance.close_database();
-        qDebug() << __FUNCTION__ << "Open databas fail!";
-    }
-
-    fileName_db = filePath + "/db/inpsect_template/电阻.db";
-    open_db = dbInspect_template_capacitance.open_database(fileName_db);
-    if(open_db == false)
-    {
-        /* 关闭数据库 */
-        dbInspect_template_capacitance.close_database();
-        qDebug() << __FUNCTION__ << "Open databas fail!";
-    }
-
-    fileName_db = filePath + "/db/inpsect_template/直流电流.db";
-    open_db = dbInspect_template_direct_current.open_database(fileName_db);
-    if(open_db == false)
-    {
-        /* 关闭数据库 */
-        dbInspect_template_direct_current.close_database();
-        qDebug() << __FUNCTION__ << "Open databas fail!";
-    }
-
-    fileName_db = filePath + "/db/inpsect_template/直流电压.db";
-    open_db = dbInspect_template_direct_voltage.open_database(fileName_db);
-    if(open_db == false)
-    {
-        /* 关闭数据库 */
-        dbInspect_template_direct_voltage.close_database();
-        qDebug() << __FUNCTION__ << "Open databas fail!";
-    }
-
-    fileName_db = filePath + "/db/inpsect_template/交流电流.db";
-    open_db = dbInspect_template_alternating_current.open_database(fileName_db);
-    if(open_db == false)
-    {
-        /* 关闭数据库 */
-        dbInspect_template_alternating_current.close_database();
-        qDebug() << __FUNCTION__ << "Open databas fail!";
-    }
-
-    fileName_db = filePath + "/db/inpsect_template/交流电压.db";
-    open_db = dbInspect_template_alternating_voltage.open_database(fileName_db);
-    if(open_db == false)
-    {
-        /* 关闭数据库 */
-        dbInspect_template_alternating_voltage.close_database();
-        qDebug() << __FUNCTION__ << "Open databas fail!";
-    }
 
     /* 设置treeWidget */
     ui->treeWidget_template->setColumnCount(1);
@@ -230,45 +173,8 @@ void frmInspectTemplate::initForm(void)
 
 void frmInspectTemplate::uninitForm(void)
 {
-    dbInspect_template_resistance.close_database();
-    dbInspect_template_capacitance.close_database();
-    dbInspect_template_direct_current.close_database();
-    dbInspect_template_direct_voltage.close_database();
-    dbInspect_template_alternating_current.close_database();
-    dbInspect_template_alternating_voltage.close_database();
-}
-
-void frmInspectTemplate::on_btn_create_clicked()
-{
-    /* 获取模板名称 */
-    QString template_name = ui->lineEdit_name->text();
-
-    /* 获取模板类别 */
-    QString template_type = ui->comboBox_type->currentText();
-
-    /* 在模板treeWidget加入一个节点 */
-    QList<QTreeWidgetItem *> rootList;
-    rootList = ui->treeWidget_template->findItems(template_type, nullptr, 0);
-    QTreeWidgetItem* root = rootList.at(0);
-    QTreeWidgetItem* leaf = new QTreeWidgetItem(root, QStringList(template_name));
-    root->addChild(leaf);
-
-    ui->treeWidget_template->expandAll();
-
-    /* 设置tableWidget的header */
-    QStringList strList;
-
-    strList << maps_template_header[template_type].template_rang << maps_template_header[template_type].template_standard_value << maps_template_header[template_type].template_standard_max_error;
-
-    ui->tableWidget_template->setWindowTitle(template_name);
-    ui->tableWidget_template->setColumnCount(3);
-
-    //将表头写入表格
-    ui->tableWidget_template->setHorizontalHeaderLabels(strList);
-    //自动调整宽度
-    ui->tableWidget_template->horizontalHeader()->setStretchLastSection(true);
-
-    ui->tableWidget_template->setRowCount(1);
+    QTreeWidgetItem* root = ui->treeWidget_template->topLevelItem(0);
+    freeTreeWidget(root);
 }
 
 void frmInspectTemplate::on_treeWidget_template_itemClicked(QTreeWidgetItem *item, int column)
@@ -324,10 +230,86 @@ void frmInspectTemplate::on_treeWidget_template_itemClicked(QTreeWidgetItem *ite
 
         row_inc++;
     }
+}
 
+void frmInspectTemplate::on_btn_create_clicked()
+{
+    /* 获取模板名称 */
+    QString template_name = ui->lineEdit_name->text();
+
+    /* 获取模板类别 */
+    QString template_type = ui->comboBox_type->currentText();
+
+    /* 在模板treeWidget加入一个节点 */
+    QList<QTreeWidgetItem *> rootList;
+    rootList = ui->treeWidget_template->findItems(template_type, nullptr, 0);
+    QTreeWidgetItem* root = rootList.at(0);
+    QTreeWidgetItem* leaf = new QTreeWidgetItem(root, QStringList(template_name));
+    root->addChild(leaf);
+
+    ui->treeWidget_template->expandAll();
+
+    /* 设置tableWidget的header */
+    QStringList strList;
+
+    strList << maps_template_header[template_type].template_rang << maps_template_header[template_type].template_standard_value << maps_template_header[template_type].template_standard_max_error;
+
+    ui->tableWidget_template->setWindowTitle(template_name);
+    ui->tableWidget_template->setColumnCount(3);
+
+    //将表头写入表格
+    ui->tableWidget_template->setHorizontalHeaderLabels(strList);
+    //自动调整宽度
+    ui->tableWidget_template->horizontalHeader()->setStretchLastSection(true);
+
+    ui->tableWidget_template->setRowCount(1);
 }
 
 void frmInspectTemplate::on_btn_save_clicked()
 {
     /* 保存treeWidget的内容到数据库 */
+
+    /* 获取模板名称 */
+    QString template_name = ui->lineEdit_name->text();
+
+    /* 获取模板类别 */
+    QString template_type = ui->comboBox_type->currentText();
+
+    /* 获取数据库 */
+    DBInspect dbInspect_template;
+    struct template_header template_header_col = maps_template_header[template_type];
+    QString columns = template_header_col.template_rang + " double, " + template_header_col.template_standard_value + " double, " + template_header_col.template_standard_max_error + " double";
+
+    dbInspect_template = map_string_db[template_type];
+
+    /* 向数据库中加入一个table */
+    dbInspect_template.add_one_table(template_name, columns);
+    int row_count = ui->tableWidget_template->rowCount();
+    QString add_line_instruction;
+
+    for(int row_inc = 0; row_inc < row_count; row_inc++)
+    {
+        add_line_instruction = "INSERT INTO " + template_name + " (" + template_header_col.template_rang + ", " +  template_header_col.template_standard_value + ", " + template_header_col.template_standard_max_error + ") VALUES ("
+                                   + ui->tableWidget_template->item(row_inc, 0)->text() + ", " + ui->tableWidget_template->item(row_inc, 1)->text()  + ", " + ui->tableWidget_template->item(row_inc, 2)->text() + ")";
+
+        qDebug() << __FUNCTION__ << add_line_instruction;
+        dbInspect_template.add_one_line_into_table(add_line_instruction);
+    }
+}
+
+void frmInspectTemplate::on_btn_add_line_clicked()
+{
+    /* tableWidget增加一行，放在最后面 */
+    int row_count = ui->tableWidget_template->rowCount();
+
+    ui->tableWidget_template->setRowCount(row_count + 1);
+}
+
+void frmInspectTemplate::on_btn_delete_line_clicked()
+{
+    /* tableWidget删除最后一行 */
+    int row_count = ui->tableWidget_template->rowCount();
+
+    ui->tableWidget_template->removeRow(row_count - 1);
+    ui->tableWidget_template->setRowCount(row_count - 1);
 }

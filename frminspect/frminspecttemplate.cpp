@@ -81,8 +81,8 @@ void frmInspectTemplate::initForm(void)
     QStringList tables;
     int tables_count;
 
-    /* 电阻 */
-    QTreeWidgetItem*  root_capacitance = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("电阻")));
+    /* 电容 */
+    QTreeWidgetItem*  root_capacitance = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("电容")));
     dbInspect_template_capacitance.get_tables(&tables, &tables_count);
     QStringListIterator itr_template_capacitance(tables);
 
@@ -94,8 +94,8 @@ void frmInspectTemplate::initForm(void)
         qDebug() << template_capacitance;
     }
 
-    /* 电容 */
-    QTreeWidgetItem*  root_resistance = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("电容")));
+    /* 电阻 */
+    QTreeWidgetItem*  root_resistance = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("电阻")));
     dbInspect_template_resistance.get_tables(&tables, &tables_count);
     QStringListIterator itr_template_resistance(tables);
 
@@ -173,8 +173,15 @@ void frmInspectTemplate::initForm(void)
 
 void frmInspectTemplate::uninitForm(void)
 {
-    QTreeWidgetItem* root = ui->treeWidget_template->topLevelItem(0);
-    freeTreeWidget(root);
+    int top_level_count = ui->treeWidget_template->topLevelItemCount();
+    QTreeWidgetItem* root;
+
+    while(top_level_count > 0)
+    {
+        top_level_count--;
+        root= ui->treeWidget_template->takeTopLevelItem(0);
+        freeTreeWidget(root);
+    }
 }
 
 void frmInspectTemplate::on_treeWidget_template_itemClicked(QTreeWidgetItem *item, int column)
@@ -220,12 +227,12 @@ void frmInspectTemplate::on_treeWidget_template_itemClicked(QTreeWidgetItem *ite
     while(itr_table_content.hasNext())
     {
         QString line_content = itr_table_content.next().toLocal8Bit();
-        qDebug() << __FUNCTION__ << line_content;
+        //qDebug() << __FUNCTION__ << line_content;
 
         for(columm_inc = 0; columm_inc < columns_count; columm_inc++)
         {
             ui->tableWidget_template->setItem(row_inc, columm_inc, new QTableWidgetItem(line_content.section(',', columm_inc, columm_inc)));
-            qDebug() << __FUNCTION__ << row_inc << columm_inc << line_content.section(',', columm_inc, columm_inc);
+            //qDebug() << __FUNCTION__ << row_inc << columm_inc << line_content.section(',', columm_inc, columm_inc);
         }
 
         row_inc++;
@@ -292,7 +299,7 @@ void frmInspectTemplate::on_btn_save_clicked()
         add_line_instruction = "INSERT INTO " + template_name + " (" + template_header_col.template_rang + ", " +  template_header_col.template_standard_value + ", " + template_header_col.template_standard_max_error + ") VALUES ("
                                    + ui->tableWidget_template->item(row_inc, 0)->text() + ", " + ui->tableWidget_template->item(row_inc, 1)->text()  + ", " + ui->tableWidget_template->item(row_inc, 2)->text() + ")";
 
-        qDebug() << __FUNCTION__ << add_line_instruction;
+        //qDebug() << __FUNCTION__ << add_line_instruction;
         dbInspect_template.add_one_line_into_table(add_line_instruction);
     }
 }

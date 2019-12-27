@@ -575,25 +575,6 @@
      <string>检定新项目</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_inspect_template_manage">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>20</y>
-      <width>101</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="text">
-     <string>检定模板管理</string>
-    </property>
-   </widget>
   </widget>
  </widget>
  <resources/>

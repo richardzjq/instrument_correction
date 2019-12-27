@@ -94,6 +94,7 @@ void frmInspectProject::initForm(void)
     ui->tableWidget_inspect_result->horizontalHeader()->setStretchLastSection(true);
 
     ui->btn_inspect_mode->setEnabled(false);
+    ui->btn_save->setEnabled(false);
 }
 
 void frmInspectProject::uninitForm(void)

@@ -2,6 +2,7 @@
 #include "ui_frminspectmain.h"
 #include "inspect_db_global.h"
 #include "frminspectcheck.h"
+#include "frminspecttemplate.h"
 
 /* 所有的数据库在inspect main中打开，关闭 */
 DBInspect dbInspect_record;
@@ -131,6 +132,8 @@ void frmInspectMain::initForm(void)
     ui->tableWidget_record->horizontalHeader()->setStretchLastSection(true);
 
     refresh_record_table();
+
+    ui->btn_exit->setEnabled(false);
 }
 
 void frmInspectMain::uninitForm(void)
@@ -164,7 +167,7 @@ void frmInspectMain::initData(void)
         qDebug() << __FUNCTION__ << "Open databas fail!";
     }
 
-    fileName_db = filePath + "/db/inpsect_template/电容.db";
+    fileName_db = filePath + "/db/inpsect_template/电阻.db";
     open_db = dbInspect_template_resistance.open_database(fileName_db);
     if(open_db == false)
     {
@@ -173,7 +176,7 @@ void frmInspectMain::initData(void)
         qDebug() << __FUNCTION__ << "Open databas fail!";
     }
 
-    fileName_db = filePath + "/db/inpsect_template/电阻.db";
+    fileName_db = filePath + "/db/inpsect_template/电容.db";
     open_db = dbInspect_template_capacitance.open_database(fileName_db);
     if(open_db == false)
     {
@@ -362,5 +365,21 @@ void frmInspectMain::on_btn_new_inspect_clicked()
 {
     //this->hide();
     frmInspectCheck *frm = new frmInspectCheck;
+    frm->show();
+}
+
+void frmInspectMain::on_btn_refresh_clicked()
+{
+    refresh_record_table();
+}
+
+void frmInspectMain::on_btn_exit_clicked()
+{
+}
+
+void frmInspectMain::on_btn_inspect_template_manage_clicked()
+{
+    //this->hide();
+    frmInspectTemplate *frm = new frmInspectTemplate;
     frm->show();
 }

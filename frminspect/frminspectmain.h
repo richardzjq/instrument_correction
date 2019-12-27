@@ -34,6 +34,9 @@ private slots:
     void on_comboBox_sample_specification_currentIndexChanged(const QString &arg1);
     void on_comboBox_inspector_currentIndexChanged(const QString &arg1);
     void on_btn_new_inspect_clicked();
+    void on_btn_refresh_clicked();
+    void on_btn_exit_clicked();
+    void on_btn_inspect_template_manage_clicked();
 };
 
 #endif // FRMINSPECTMAIN_H

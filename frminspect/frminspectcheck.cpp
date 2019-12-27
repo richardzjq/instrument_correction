@@ -1,6 +1,5 @@
 ﻿#include "frminspectcheck.h"
 #include "frminspectproject.h"
-#include "frminspecttemplate.h"
 #include "ui_frminspectcheck.h"
 #include "gpibctl.h"
 #include "inspect_db_global.h"
@@ -127,7 +126,7 @@ void frmInspectCheck::initForm(void)
 
 void frmInspectCheck::uninitForm(void)
 {
-    QTreeWidgetItem* root = ui->treeWidget_inpsected_project->topLevelItem(0);
+    QTreeWidgetItem* root = ui->treeWidget_inpsected_project->takeTopLevelItem(0);
     freeTreeWidget(root);
 }
 
@@ -241,13 +240,6 @@ void frmInspectCheck::on_btn_delete_inspected_project_clicked()
     dbInspect_record.delete_one_line_into_table(delete_line_instruction);
 
     this->clearForm();
-}
-
-void frmInspectCheck::on_btn_inspect_template_manage_clicked()
-{
-    //this->hide();
-    frmInspectTemplate *frm = new frmInspectTemplate;
-    frm->show();
 }
 
 void frmInspectCheck::on_btn_inspect_new_project_clicked()

@@ -1,4 +1,5 @@
-﻿#ifndef FRMINSPECTPROJECT_H
+﻿void on_btn_inspect_mode_clicked();
+#ifndef FRMINSPECTPROJECT_H
 #define FRMINSPECTPROJECT_H
 
 #include <QWidget>
@@ -47,6 +48,7 @@ private slots:
     void on_btn_gpib_disconnect_clicked();
     void on_btn_begin_inspect_clicked();
     void on_btn_save_clicked();
+    void on_btn_inspect_mode_clicked();
 };
 
 /* 每个点检测次数，最后求平均值 */

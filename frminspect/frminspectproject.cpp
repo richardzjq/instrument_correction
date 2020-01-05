@@ -93,8 +93,8 @@ void frmInspectProject::initForm(void)
     //自动调整宽度
     ui->tableWidget_inspect_result->horizontalHeader()->setStretchLastSection(true);
 
-    ui->btn_inspect_mode->setEnabled(false);
-    ui->btn_save->setEnabled(false);
+    //ui->btn_inspect_mode->setEnabled(false);
+    //ui->btn_save->setEnabled(false);
 }
 
 void frmInspectProject::uninitForm(void)
@@ -177,23 +177,6 @@ void frmInspectProject::on_comboBox_template_name_currentIndexChanged(const QStr
     }
 }
 
-void frmInspectProject::on_btn_gpib_connect_clicked()
-{
-    /* 发送命令，和fluke标准源建立GPIB连接 */
-    /* 打开GPIB */
-    ViStatus status;
-
-    status = AutoConnectGPIB(&viSession);
-}
-
-void frmInspectProject::on_btn_gpib_disconnect_clicked()
-{
-    /* 发送命令，和fluke标准源断开GPIB连接 */
-    /* 关闭GPIB */
-    CloseConnectGPIB(&viSession);
-    viSession = 0;
-}
-
 void frmInspectProject::on_btn_begin_inspect_clicked()
 {
     /* 根据检定模板，按次序进行检定 */
@@ -259,7 +242,32 @@ void frmInspectProject::on_btn_begin_inspect_clicked()
     }
 }
 
+void frmInspectProject::on_btn_gpib_connect_clicked()
+{
+    /* 发送命令，和fluke标准源建立GPIB连接 */
+    /* 打开GPIB */
+    ViStatus status;
+
+    status = AutoConnectGPIB(&viSession);
+}
+
+void frmInspectProject::on_btn_gpib_disconnect_clicked()
+{
+    /* 发送命令，和fluke标准源断开GPIB连接 */
+    /* 关闭GPIB */
+    CloseConnectGPIB(&viSession);
+    viSession = 0;
+}
+
 void frmInspectProject::on_btn_save_clicked()
 {
+
+}
+
+void frmInspectProject::on_btn_inspect_mode_clicked()
+{
+    /* 测试一下GPIB读写 */
+    Set_DC_Current(&viSession, 3.3);
+
 
 }

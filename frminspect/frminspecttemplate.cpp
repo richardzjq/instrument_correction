@@ -174,12 +174,16 @@ void frmInspectTemplate::initForm(void)
 void frmInspectTemplate::uninitForm(void)
 {
     int top_level_count = ui->treeWidget_template->topLevelItemCount();
-    QTreeWidgetItem* root;
+    int top_leve_count_each = ui->treeWidget_template->topLevelItemCount();
+    qDebug() << top_leve_count_each;
+    QTreeWidgetItem* root = nullptr;
 
     while(top_level_count > 0)
     {
         top_level_count--;
+        top_leve_count_each = ui->treeWidget_template->topLevelItemCount();
         root= ui->treeWidget_template->takeTopLevelItem(0);
+        qDebug() << top_leve_count_each << root;
         freeTreeWidget(root);
     }
 }

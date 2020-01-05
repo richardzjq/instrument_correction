@@ -70,6 +70,7 @@ ViStatus Set_DC_Current(ViPSession m_ViSession, double Current)
     qDebug() << __FUNCTION__ << "Current: " << Current;
 
     ViStatus status;
+    char buf[256] = {0};
 
     status = viPrintf(*m_ViSession, "OUT %f A \n", Current);
     //viPrintf(m_ViSession, "OUT?\n");
@@ -83,6 +84,9 @@ ViStatus Set_DC_Current(ViPSession m_ViSession, double Current)
 
         return status;
     } 
+
+    viScanf(*m_ViSession, "%t", buf);
+    qDebug() << buf;
 
 	return VI_SUCCESS;
  } 

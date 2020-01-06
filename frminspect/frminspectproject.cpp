@@ -206,11 +206,12 @@ void frmInspectProject::on_btn_begin_inspect_clicked()
     {
         QString line_content = itr_table_content.next().toLocal8Bit();
         qDebug() << line_content;
+        bool is_ok;
 
         /* 解析出表中一行各个字段的值，量程-标准值-下限值-显示值-上限值-扩展不确定度 */
-        range_val               = line_content.section('-', 0, 0).toDouble();
-        standard_val            = line_content.section('-', 1, 1).toDouble();
-        max_error_val           = line_content.section('-', 2, 2).toDouble();
+        range_val               = line_content.section('-', 0, 0).toDouble(&is_ok);
+        standard_val            = line_content.section('-', 1, 1).toDouble(&is_ok);
+        max_error_val           = line_content.section('-', 2, 2).toDouble(&is_ok);
 
         qDebug() << "range_val " << range_val;
         qDebug() << "standard_val " << standard_val;
@@ -231,10 +232,10 @@ void frmInspectProject::on_btn_begin_inspect_clicked()
         extend_uncertainty_value    = extend_uncertainty(synthesis_uncertainty_value);
 
         /* 向检定结果数据库table中加入一行 */
-        s_range_value = QString::number(range_val, 'g', 10);
-        s_standard_value = QString::number(standard_val, 'g', 10);
-        s_show_value = QString::number(average_value, 'g', 10);
-        s_max_error_value = QString::number(max_error_val, 'g', 10);
+        s_range_value = QString::number(range_val, 10, 10);
+        s_standard_value = QString::number(standard_val, 10, 10);
+        s_show_value = QString::number(average_value, 10, 10);
+        s_max_error_value = QString::number(max_error_val, 10, 10);
         add_line_instruction = "INSERT INTO " + record_number + " (量程, 标准值, 显示值, 允许误差) VALUES ("
                                            + s_range_value + ", " + s_standard_value  + ", " + s_show_value + ", " +  s_max_error_value + ")";
 

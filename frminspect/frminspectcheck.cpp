@@ -122,6 +122,9 @@ void frmInspectCheck::initForm(void)
     ui->tableWidget_inspect_result->setHorizontalHeaderLabels(columns);
     //自动调整宽度
     ui->tableWidget_inspect_result->horizontalHeader()->setStretchLastSection(true);
+
+    ui->btn_cancel_modification->setEnabled(false);
+    ui->btn_print->setEnabled(false);
 }
 
 void frmInspectCheck::uninitForm(void)

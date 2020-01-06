@@ -39,9 +39,9 @@ double variance(double *x, int len)
          return 0;
 	}
 	
-	if(len <= 0)
+    if(len - 1 <= 0)
 	{
-         qDebug() << "len应该是正整数";
+         qDebug() << "len应该大于1";
          return 0;
 	}
 	
@@ -51,7 +51,7 @@ double variance(double *x, int len)
     for (int i = 0; i < len; i++) // 求和
         sum += pow(x[i] - average_value, 2);
     
-	return sum/len; // 得到平均值
+    return sum/(len - 1); // 得到平均值
 }
 
 /**

@@ -134,6 +134,7 @@ void frmInspectMain::initForm(void)
     refresh_record_table();
 
     ui->btn_exit->setEnabled(false);
+    ui->btn_new_inspect->setEnabled(false);
 }
 
 void frmInspectMain::uninitForm(void)
@@ -364,8 +365,8 @@ void frmInspectMain::on_comboBox_inspector_currentIndexChanged(const QString &ar
 void frmInspectMain::on_btn_new_inspect_clicked()
 {
     //this->hide();
-    frmInspectCheck *frm = new frmInspectCheck;
-    frm->show();
+    //frmInspectCheck *frm = new frmInspectCheck;
+    //frm->show();
 }
 
 void frmInspectMain::on_btn_refresh_clicked()

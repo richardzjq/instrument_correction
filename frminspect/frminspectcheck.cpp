@@ -227,6 +227,12 @@ void frmInspectCheck::on_btn_save_clicked()
 
 void frmInspectCheck::on_btn_delete_inspected_project_clicked()
 {
+    ui->treeWidget_inpsected_project->expandAll();
+
+    /* 从数据库中删除该行 */
+    QString delete_line_instruction = QString("DELETE FROM 检定记录 WHERE 检定记录编号 == '%1'").arg(ui->treeWidget_inpsected_project->currentItem()->text(0));
+    dbInspect_record.delete_one_line_into_table(delete_line_instruction);
+
     /* 获得当root节点 */
     QTreeWidgetItem* root = ui->treeWidget_inpsected_project->topLevelItem(0);
     /* 获得当前节点 */
@@ -235,12 +241,6 @@ void frmInspectCheck::on_btn_delete_inspected_project_clicked()
     root->removeChild(item);
     /* 释放item占用的内存 */
     delete item;
-
-    ui->treeWidget_inpsected_project->expandAll();
-
-    /* 从数据库中删除该行 */
-    QString delete_line_instruction = QString("DELETE FROM 检定记录 WHERE 检定记录编号 == '%1'").arg(ui->treeWidget_inpsected_project->currentItem()->text(0));
-    dbInspect_record.delete_one_line_into_table(delete_line_instruction);
 
     this->clearForm();
 }

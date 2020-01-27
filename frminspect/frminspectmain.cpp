@@ -167,8 +167,9 @@ void frmInspectMain::initData(void)
         dbInspect_inspect_data_record.close_database();
         qDebug() << __FUNCTION__ << "Open databas fail!";
     }
+    qDebug() << __FUNCTION__ << "Open databas inspect_data.db OK!";
 
-    fileName_db = filePath + "/db/inpsect_template/电阻.db";
+    fileName_db = filePath + "/db/inpsect_template/resistance.db";
     open_db = dbInspect_template_resistance.open_database(fileName_db);
     if(open_db == false)
     {
@@ -177,7 +178,7 @@ void frmInspectMain::initData(void)
         qDebug() << __FUNCTION__ << "Open databas fail!";
     }
 
-    fileName_db = filePath + "/db/inpsect_template/电容.db";
+    fileName_db = filePath + "/db/inpsect_template/capacitance.db";
     open_db = dbInspect_template_capacitance.open_database(fileName_db);
     if(open_db == false)
     {
@@ -186,7 +187,7 @@ void frmInspectMain::initData(void)
         qDebug() << __FUNCTION__ << "Open databas fail!";
     }
 
-    fileName_db = filePath + "/db/inpsect_template/直流电流.db";
+    fileName_db = filePath + "/db/inpsect_template/direct_current.db";
     open_db = dbInspect_template_direct_current.open_database(fileName_db);
     if(open_db == false)
     {
@@ -195,7 +196,7 @@ void frmInspectMain::initData(void)
         qDebug() << __FUNCTION__ << "Open databas fail!";
     }
 
-    fileName_db = filePath + "/db/inpsect_template/直流电压.db";
+    fileName_db = filePath + "/db/inpsect_template/direct_voltage.db";
     open_db = dbInspect_template_direct_voltage.open_database(fileName_db);
     if(open_db == false)
     {
@@ -204,7 +205,7 @@ void frmInspectMain::initData(void)
         qDebug() << __FUNCTION__ << "Open databas fail!";
     }
 
-    fileName_db = filePath + "/db/inpsect_template/交流电流.db";
+    fileName_db = filePath + "/db/inpsect_template/alternating_current.db";
     open_db = dbInspect_template_alternating_current.open_database(fileName_db);
     if(open_db == false)
     {
@@ -213,7 +214,7 @@ void frmInspectMain::initData(void)
         qDebug() << __FUNCTION__ << "Open databas fail!";
     }
 
-    fileName_db = filePath + "/db/inpsect_template/交流电压.db";
+    fileName_db = filePath + "/db/inpsect_template/alternating_voltage.db";
     open_db = dbInspect_template_alternating_voltage.open_database(fileName_db);
     if(open_db == false)
     {

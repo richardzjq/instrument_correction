@@ -20,38 +20,38 @@ frmInspectTemplate::~frmInspectTemplate()
 
 void frmInspectTemplate::initData(void)
 {
-    map_string_db.insert("直流电流", dbInspect_template_direct_current);
-    map_string_db.insert("直流电压", dbInspect_template_direct_voltage);
-    map_string_db.insert("交流电流", dbInspect_template_alternating_current);
-    map_string_db.insert("交流电压", dbInspect_template_alternating_voltage);
-    map_string_db.insert("电阻", dbInspect_template_resistance);
-    map_string_db.insert("电容", dbInspect_template_capacitance);
+    map_string_db.insert("direct_current", dbInspect_template_direct_current);
+    map_string_db.insert("direct_voltage", dbInspect_template_direct_voltage);
+    map_string_db.insert("alternating_current", dbInspect_template_alternating_current);
+    map_string_db.insert("alternating_voltage", dbInspect_template_alternating_voltage);
+    map_string_db.insert("resistance", dbInspect_template_resistance);
+    map_string_db.insert("capacitance", dbInspect_template_capacitance);
 
     struct template_header template_header_current;
-    template_header_current.template_rang = "量程A";
-    template_header_current.template_standard_value = "标准值A";
-    template_header_current.template_standard_max_error = "允许误差%";
-    maps_template_header.insert("直流电流", template_header_current);
-    maps_template_header.insert("交流电流", template_header_current);
+    template_header_current.template_rang = "range_A";
+    template_header_current.template_standard_value = "standard_A";
+    template_header_current.template_standard_max_error = "error";
+    maps_template_header.insert("direct_current", template_header_current);
+    maps_template_header.insert("alternating_current", template_header_current);
 
     struct template_header template_header_voltage;
-    template_header_voltage.template_rang = "量程V";
-    template_header_voltage.template_standard_value = "标准值V";
-    template_header_voltage.template_standard_max_error = "允许误差%";
-    maps_template_header.insert("直流电压", template_header_voltage);
-    maps_template_header.insert("交流电压", template_header_voltage);
+    template_header_voltage.template_rang = "range_V";
+    template_header_voltage.template_standard_value = "standard_V";
+    template_header_voltage.template_standard_max_error = "error";
+    maps_template_header.insert("direct_voltage", template_header_voltage);
+    maps_template_header.insert("alternating_voltage", template_header_voltage);
 
     struct template_header template_header_resistance;
-    template_header_voltage.template_rang = "量程Ω";
-    template_header_voltage.template_standard_value = "标准值Ω";
-    template_header_voltage.template_standard_max_error = "允许误差%";
-    maps_template_header.insert("电阻", template_header_resistance);
+    template_header_resistance.template_rang = "range_O";
+    template_header_resistance.template_standard_value = "standard_O";
+    template_header_resistance.template_standard_max_error = "error";
+    maps_template_header.insert("resistance", template_header_resistance);
 
     struct template_header template_header_capacitance;
-    template_header_voltage.template_rang = "量程pf";
-    template_header_voltage.template_standard_value = "标准值pf";
-    template_header_voltage.template_standard_max_error = "允许误差%";
-    maps_template_header.insert("电容", template_header_capacitance);
+    template_header_capacitance.template_rang = "range_pf";
+    template_header_capacitance.template_standard_value = "standard_pf";
+    template_header_capacitance.template_standard_max_error = "error";
+    maps_template_header.insert("capacitance", template_header_capacitance);
 }
 
 void frmInspectTemplate::initForm(void)
@@ -62,7 +62,7 @@ void frmInspectTemplate::initForm(void)
     ui->lineEdit_name->setText("");
 
     strList.clear();
-    strList << "" << "直流电流" << "直流电压" << "交流电流" << "交流电压" << "电阻" << "电容";
+    strList << "" << "direct_current" << "direct_voltage" << "alternating_current" << "alternating_voltage" << "resistance" << "capacitance";
     ui->comboBox_type->addItems(strList);
 
     ui->radioButton_fixed_output->setChecked(true);
@@ -81,34 +81,8 @@ void frmInspectTemplate::initForm(void)
     QStringList tables;
     int tables_count;
 
-    /* 电容 */
-    QTreeWidgetItem*  root_capacitance = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("电容")));
-    dbInspect_template_capacitance.get_tables(&tables, &tables_count);
-    QStringListIterator itr_template_capacitance(tables);
-
-    while (itr_template_capacitance.hasNext())
-    {
-        QString template_capacitance = itr_template_capacitance.next().toLocal8Bit();
-        leaf = new QTreeWidgetItem(root_capacitance, QStringList(template_capacitance));
-        root_capacitance->addChild(leaf);
-        qDebug() << template_capacitance;
-    }
-
-    /* 电阻 */
-    QTreeWidgetItem*  root_resistance = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("电阻")));
-    dbInspect_template_resistance.get_tables(&tables, &tables_count);
-    QStringListIterator itr_template_resistance(tables);
-
-    while (itr_template_resistance.hasNext())
-    {
-        QString template_resistance = itr_template_resistance.next().toLocal8Bit();
-        leaf = new QTreeWidgetItem(root_resistance, QStringList(template_resistance));
-        root_resistance->addChild(leaf);
-        qDebug() << template_resistance;
-    }
-
     /* 直流电流 */
-    QTreeWidgetItem*  root_direct_current = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("直流电流")));
+    QTreeWidgetItem*  root_direct_current = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("direct_current")));
     dbInspect_template_direct_current.get_tables(&tables, &tables_count);
     QStringListIterator itr_template_direct_current(tables);
 
@@ -121,7 +95,7 @@ void frmInspectTemplate::initForm(void)
     }
 
     /* 直流电压 */
-    QTreeWidgetItem*  root_direct_voltage = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("直流电压")));
+    QTreeWidgetItem*  root_direct_voltage = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("direct_voltage")));
     dbInspect_template_direct_voltage.get_tables(&tables, &tables_count);
     QStringListIterator itr_template_direct_voltage(tables);
 
@@ -134,7 +108,7 @@ void frmInspectTemplate::initForm(void)
     }
 
     /* 交流电流 */
-    QTreeWidgetItem*  root_alternating_current = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("交流电流")));
+    QTreeWidgetItem*  root_alternating_current = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("alternating_current")));
     dbInspect_template_alternating_current.get_tables(&tables, &tables_count);
     QStringListIterator itr_template_alternating_current(tables);
 
@@ -147,7 +121,7 @@ void frmInspectTemplate::initForm(void)
     }
 
     /* 交流电压 */
-    QTreeWidgetItem*  root_alternating_voltage = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("交流电压")));
+    QTreeWidgetItem*  root_alternating_voltage = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("alternating_voltage")));
     dbInspect_template_alternating_voltage.get_tables(&tables, &tables_count);
     QStringListIterator itr_template_alternating_voltage(tables);
 
@@ -159,8 +133,35 @@ void frmInspectTemplate::initForm(void)
         qDebug() << template_alternating_voltage;
     }
 
+    /* 电阻 */
+    QTreeWidgetItem*  root_resistance = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("resistance")));
+    dbInspect_template_resistance.get_tables(&tables, &tables_count);
+    QStringListIterator itr_template_resistance(tables);
+
+    while (itr_template_resistance.hasNext())
+    {
+        QString template_resistance = itr_template_resistance.next().toLocal8Bit();
+        leaf = new QTreeWidgetItem(root_resistance, QStringList(template_resistance));
+        root_resistance->addChild(leaf);
+        qDebug() << template_resistance;
+    }
+
+
+    /* 电容 */
+    QTreeWidgetItem*  root_capacitance = new QTreeWidgetItem(ui->treeWidget_template, QStringList(QString("capacitance")));
+    dbInspect_template_capacitance.get_tables(&tables, &tables_count);
+    QStringListIterator itr_template_capacitance(tables);
+
+    while (itr_template_capacitance.hasNext())
+    {
+        QString template_capacitance = itr_template_capacitance.next().toLocal8Bit();
+        leaf = new QTreeWidgetItem(root_capacitance, QStringList(template_capacitance));
+        root_capacitance->addChild(leaf);
+        qDebug() << template_capacitance;
+    }
+
     QList<QTreeWidgetItem *> rootList;
-    rootList << root_capacitance << root_resistance << root_direct_current << root_direct_voltage << root_alternating_current << root_alternating_voltage;
+    rootList << root_direct_current << root_direct_voltage << root_alternating_current << root_alternating_voltage << root_resistance << root_capacitance;
 
     ui->treeWidget_template->insertTopLevelItems(0, rootList);
 
@@ -169,6 +170,7 @@ void frmInspectTemplate::initForm(void)
     ui->btn_edit_line->setEnabled(false);
     ui->btn_move_up->setEnabled(false);
     ui->btn_move_down->setEnabled(false);
+    ui->btn_delete->setEnabled(false);
 }
 
 void frmInspectTemplate::uninitForm(void)
@@ -282,9 +284,11 @@ void frmInspectTemplate::on_btn_save_clicked()
 
     /* 获取模板名称 */
     QString template_name = ui->lineEdit_name->text();
+    qDebug() << __FUNCTION__ << template_name;
 
     /* 获取模板类别 */
     QString template_type = ui->comboBox_type->currentText();
+    qDebug() << __FUNCTION__ << template_type;
 
     /* 获取数据库 */
     DBInspect dbInspect_template;
@@ -323,4 +327,9 @@ void frmInspectTemplate::on_btn_delete_line_clicked()
 
     ui->tableWidget_template->removeRow(row_count - 1);
     ui->tableWidget_template->setRowCount(row_count - 1);
+}
+
+void frmInspectTemplate::on_btn_delete_clicked()
+{
+
 }

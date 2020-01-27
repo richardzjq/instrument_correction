@@ -30,12 +30,12 @@ void frmInspectProject::getData(QString data)
 
 void frmInspectProject::initData(void)
 {
-    map_string_db.insert("直流电流", dbInspect_template_direct_current);
-    map_string_db.insert("直流电压", dbInspect_template_direct_voltage);
-    map_string_db.insert("交流电流", dbInspect_template_alternating_current);
-    map_string_db.insert("交流电压", dbInspect_template_alternating_voltage);
-    map_string_db.insert("电阻", dbInspect_template_resistance);
-    map_string_db.insert("电容", dbInspect_template_capacitance);
+    map_string_db.insert("direct_current", dbInspect_template_direct_current);
+    map_string_db.insert("direct_voltage", dbInspect_template_direct_voltage);
+    map_string_db.insert("alternating_current", dbInspect_template_alternating_current);
+    map_string_db.insert("alternating_voltage", dbInspect_template_alternating_voltage);
+    map_string_db.insert("resistance", dbInspect_template_resistance);
+    map_string_db.insert("capacitance", dbInspect_template_capacitance);
 
     /* 打开串口 */
     isComOk = false;
@@ -68,7 +68,7 @@ void frmInspectProject::initForm(void)
     QStringList strList;
 
     strList.clear();
-    strList << "" << "直流电流" << "直流电压" << "交流电流" << "交流电压" << "电阻" << "电容";
+    strList << "" << "direct_current" << "direct_voltage" << "alternating_current" << "alternating_voltage" << "resistance" << "capacitance";
     ui->comboBox_template_type->addItems(strList);
 
     strList.clear();
@@ -88,7 +88,7 @@ void frmInspectProject::initForm(void)
 
     //将表头写入表格
     strList.clear();
-    strList << "量程" << "标准值" << "示值" << "误差(%)";
+    strList << "range" << "standard" << "show" << "error(%)";
     ui->tableWidget_inspect_result->setHorizontalHeaderLabels(strList);
     //自动调整宽度
     ui->tableWidget_inspect_result->horizontalHeader()->setStretchLastSection(true);
@@ -187,7 +187,7 @@ void frmInspectProject::on_btn_begin_inspect_clicked()
     QString template_name = ui->comboBox_template_name->currentText();
 
     /* 在inspect_data数据库中创建一个新table，名称是检定编号，保存检定数据 */
-    QString columns = "量程 double, 标准值 double, 显示值 double, 允许误差 double";
+    QString columns = "range real, standard real, show real, error real";
     dbInspect_inspect_data_record.add_one_table(record_number, columns);
     qDebug() << record_number;
 
@@ -236,7 +236,7 @@ void frmInspectProject::on_btn_begin_inspect_clicked()
         s_standard_value = QString::number(standard_val, 10, 10);
         s_show_value = QString::number(average_value, 10, 10);
         s_max_error_value = QString::number(max_error_val, 10, 10);
-        add_line_instruction = "INSERT INTO " + record_number + " (量程, 标准值, 显示值, 允许误差) VALUES ("
+        add_line_instruction = "INSERT INTO " + record_number + " (range, standard, show, error) VALUES ("
                                            + s_range_value + ", " + s_standard_value  + ", " + s_show_value + ", " +  s_max_error_value + ")";
 
         dbInspect_inspect_data_record.add_one_line_into_table(add_line_instruction);

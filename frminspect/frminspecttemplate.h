@@ -36,6 +36,7 @@ private slots:
     void on_btn_save_clicked();
     void on_btn_add_line_clicked();
     void on_btn_delete_line_clicked();
+    void on_btn_delete_clicked();
 };
 
 #endif // FRMINSPECTTEMPLATE_H

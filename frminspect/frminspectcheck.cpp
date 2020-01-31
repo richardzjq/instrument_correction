@@ -40,6 +40,24 @@ void frmInspectCheck::initForm(void)
     strList << "" << "合格" << "不合格";
     ui->comboBox_inspect_conclusion->addItems(strList);
 
+    QString line;
+    QString data;
+
+    QFile file("送检单位.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+       return;
+
+    QTextStream file_text(&file);
+    //in.setCodec("GBK");
+    while (!file_text.atEnd())
+    {
+        line = file_text.readLine();
+        line = line + "\n";
+        data = data + line;
+    }
+    file.close();
+    qDebug() << data;
+
     strList.clear();
     strList << "" << "湖北钢铁厂" << "湖北电科院";
     ui->comboBox_inspected_institution->addItems(strList);

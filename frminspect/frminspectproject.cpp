@@ -25,7 +25,7 @@ frmInspectProject::~frmInspectProject()
 
 void frmInspectProject::getData(QString data)
 {   //保存传递的数据
-   record_number = data;
+   record_number = "INS_" + data;
 }
 
 void frmInspectProject::initData(void)
@@ -109,6 +109,34 @@ void frmInspectProject::set_standard_source(int set_type, double set_val)
 {
     set_type = set_type;
     set_val = set_val;
+}
+
+static void get_instrument_value_RS232_34401A(int get_type, double* p_get_val)
+{
+    /* 设置串口 */
+    serial.BaudRate = 9600;
+    serial.DataBits = 8;
+    serial.Parity = Parity.None;
+    serial.DtrEnable = true;
+    serial.StopBits = StopBits.One;
+    serial.ReadTimeout = 10000;
+
+    /* 发命令 */
+    serial.WriteLine("SYST:REM");
+    Thread.Sleep(30);
+    //清除万用表显示板信息
+    serial.WriteLine("*CLS");
+    Thread.Sleep(30);
+    serial.WriteLine("TRIG:SOUR IMM");
+    Thread.Sleep(30);
+
+    /* 读取值 */
+    serial.WriteLine("MEAS:VOLT?");
+    Thread.Sleep(1000);
+    //读取万用表电压
+    float viResult = float.Parse(serial.ReadLine());
+    //保留三位小数
+    viResult = (float)Math.Round(viResult, 3);
 }
 
 /**

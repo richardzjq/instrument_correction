@@ -317,16 +317,20 @@ void frmInspectTemplate::on_btn_add_line_clicked()
     /* tableWidget增加一行，放在最后面 */
     int row_count = ui->tableWidget_template->rowCount();
 
+    ui->tableWidget_template->insertRow(row_count);
     ui->tableWidget_template->setRowCount(row_count + 1);
 }
 
 void frmInspectTemplate::on_btn_delete_line_clicked()
 {
-    /* tableWidget删除最后一行 */
+    /* tableWidget删除选中的行 */
+    int row_index = ui->tableWidget_template->currentRow();
     int row_count = ui->tableWidget_template->rowCount();
 
-    ui->tableWidget_template->removeRow(row_count - 1);
-    ui->tableWidget_template->setRowCount(row_count - 1);
+    if (row_index >= 0)
+        ui->tableWidget_template->removeRow(row_index);
+    if (row_count >= 1)
+        ui->tableWidget_template->setRowCount(row_count - 1);
 }
 
 void frmInspectTemplate::on_btn_delete_clicked()

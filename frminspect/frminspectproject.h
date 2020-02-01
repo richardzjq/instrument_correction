@@ -42,6 +42,7 @@ private slots:
     void set_standard_source(int set_type, double set_val);
     /* 获取多用表输出值，set_type为直流电压，直流电流，交流电压，交流电流，电阻*/
     void get_instrument_value(int get_type, double* p_get_val);
+    void get_instrument_value_RS232_34401A(int get_type, double* p_get_val);
     void on_comboBox_template_type_currentIndexChanged(const QString &arg1);
     void on_comboBox_template_name_currentIndexChanged(const QString &arg1);
     void on_btn_gpib_connect_clicked();

@@ -5,6 +5,8 @@
 #include "freetreewidget.h"
 #include <QtGlobal>
 #include <cmath>
+#include <QApplication>
+#include <QTime>
 #include <QDebug>
 
 frmInspectProject::frmInspectProject(QWidget *parent) :
@@ -111,32 +113,69 @@ void frmInspectProject::set_standard_source(int set_type, double set_val)
     set_val = set_val;
 }
 
-static void get_instrument_value_RS232_34401A(int get_type, double* p_get_val)
+static void qt_sleep(int time_msecond)
+{
+    QTime t;
+    t.start();
+    while(t.elapsed() < time_msecond)
+        QCoreApplication::processEvents();
+}
+
+void frmInspectProject::get_instrument_value_RS232_34401A(int get_type, double* p_get_val)
 {
     /* 设置串口 */
+    com->setBaudRate(BAUD9600);
+    com->setDataBits(DATA_8);
+    com->setParity(PAR_NONE);
+    com->setDtr(true);
+    com->setStopBits(STOP_1);
+    //com->setFlowControl(FLOW_OFF);
+    com->setTimeout(10);
+
+#if 0
     serial.BaudRate = 9600;
     serial.DataBits = 8;
     serial.Parity = Parity.None;
     serial.DtrEnable = true;
     serial.StopBits = StopBits.One;
     serial.ReadTimeout = 10000;
+#endif
 
     /* 发命令 */
+    com->write("SYST:REM");
+    qt_sleep(30);
+    com->write("*CLS");
+    qt_sleep(30);
+    com->write("TRIG:SOUR IMM");
+    qt_sleep(30);
+#if 0
     serial.WriteLine("SYST:REM");
-    Thread.Sleep(30);
+    sleep(30);
     //清除万用表显示板信息
     serial.WriteLine("*CLS");
     Thread.Sleep(30);
     serial.WriteLine("TRIG:SOUR IMM");
     Thread.Sleep(30);
+#endif
 
     /* 读取值 */
+    com->write("MEAS:VOLT?");
+    qt_sleep(1000);
+    QByteArray data = com->readAll();
+    QString str_data = data;
+    double viResult = str_data.toDouble();
+    *p_get_val = viResult;
+    qDebug() << data;
+    qDebug() << str_data;
+    qDebug() << viResult;
+#if 0
     serial.WriteLine("MEAS:VOLT?");
     Thread.Sleep(1000);
     //读取万用表电压
     float viResult = float.Parse(serial.ReadLine());
     //保留三位小数
     viResult = (float)Math.Round(viResult, 3);
+#endif
 }
 
 /**

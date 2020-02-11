@@ -48,6 +48,11 @@ static void get_string_list_from_file(QString file_name, QStringList *p_stringLi
     qDebug() << *p_stringList;
 }
 
+void frmInspectCheck::get_inspect_template_list(QStringList *p_stringList)
+{
+
+}
+
 void frmInspectCheck::initForm(void)
 {
     /* 初始化记录编号等各项 */
@@ -62,46 +67,55 @@ void frmInspectCheck::initForm(void)
     ui->comboBox_inspect_conclusion->addItems(strList);
 
     strList.clear();
-    get_string_list_from_file("送检单位.txt", &strList);
-    qDebug() << strList;
-    strList << "" << "湖北钢铁厂" << "湖北电科院";
+    strList << "";
+    get_string_list_from_file("txt/送检单位.txt", &strList);
+    //qDebug() << strList;
     ui->comboBox_inspected_institution->addItems(strList);
 
     strList.clear();
-    strList << "" << "刘慈欣" << "逻辑" << "史强";
+    strList << "";
+    get_string_list_from_file("txt/检验员.txt", &strList);
     ui->comboBox_inspector->addItems(strList);
 
     strList.clear();
-    strList << "" << "程心" << "韦德" << "乔恩斯";
+    strList << "";
+    get_string_list_from_file("txt/校验员.txt", &strList);
     ui->comboBox_verifier->addItems(strList);
 
     strList.clear();
-    strList << "" << "数字式万用表" << "指针式万用表";
+    strList << "";
+    get_string_list_from_file("txt/样例名称.txt", &strList);
     ui->comboBox_sample_name->addItems(strList);
 
     strList.clear();
-    strList << "" << "UT52" << "UT58";
+    strList << "";
+    get_string_list_from_file("txt/校验规格.txt", &strList);
     ui->comboBox_model_specification->addItems(strList);
 
     ui->lineEdit_temperature->setText("0");
     ui->lineEdit_humidity->setText("0");
 
     strList.clear();
-    strList << "" << "UNI-T" << "UNI-S";
+    strList << "";
+    get_string_list_from_file("txt/生产厂家.txt", &strList);
     ui->comboBox_manufacture->addItems(strList);
 
     ui->lineEdit_manufacted_number->setText("");
 
     strList.clear();
-    strList << "" << "UNI-T" << "UNI-S";
+    strList << "";
+    get_string_list_from_file("txt/标准设备.txt", &strList);
     ui->comboBox_standard_device->addItems(strList);
 
     strList.clear();
-    strList << "" << "JJG315-83" << "JJG315-8398";
+    strList << "";
+    get_string_list_from_file("txt/参考标准.txt", &strList);
     ui->comboBox_refered_rule->addItems(strList);
 
     strList.clear();
-    strList << "" << "数字式万用表200-200M" << "数字式万用表2n-200u" << "数字式万用表2mA-20A";
+    strList << "";
+    get_string_list_from_file("txt/校准模板.txt", &strList);
+    /* 以后从模板数据库里获取 */
     ui->comboBox_template->addItems(strList);    
 
     /* 设置treeWidget */

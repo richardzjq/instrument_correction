@@ -104,6 +104,16 @@ void frmInspectProject::uninitForm(void)
 
 }
 
+typedef enum instrument_check_type
+{
+    DIRECT_VOLT_TYPE = 0,
+    ALTERNATING_VOLT_TYPE,
+    DIRECT_CURRENT_TYPE,
+    ALTERNATING_CURRENT_TYPE,
+    RESISTANCE,
+    CAPACITANCE,
+} check_type;
+
 /**
  * 设置标准源，set_type为直流电压，直流电流，交流电压，交流电流，电阻
  */
@@ -132,35 +142,31 @@ void frmInspectProject::get_instrument_value_RS232_34401A(int get_type, double* 
     //com->setFlowControl(FLOW_OFF);
     com->setTimeout(10);
 
-#if 0
-    serial.BaudRate = 9600;
-    serial.DataBits = 8;
-    serial.Parity = Parity.None;
-    serial.DtrEnable = true;
-    serial.StopBits = StopBits.One;
-    serial.ReadTimeout = 10000;
-#endif
-
     /* 发命令 */
     com->write("SYST:REM");
     qt_sleep(30);
+    //清除万用表显示板信息
     com->write("*CLS");
     qt_sleep(30);
     com->write("TRIG:SOUR IMM");
     qt_sleep(30);
-#if 0
-    serial.WriteLine("SYST:REM");
-    sleep(30);
-    //清除万用表显示板信息
-    serial.WriteLine("*CLS");
-    Thread.Sleep(30);
-    serial.WriteLine("TRIG:SOUR IMM");
-    Thread.Sleep(30);
-#endif
 
     /* 读取值 */
-    com->write("MEAS:VOLT?");
+    switch(get_type)
+    {
+        case DIRECT_VOLT_TYPE:
+        case ALTERNATING_VOLT_TYPE:
+            com->write("MEAS:VOLT?");
+            break;
+        case DIRECT_CURRENT_TYPE:
+        case ALTERNATING_CURRENT_TYPE:
+            com->write("MEAS:CURR?");
+            break;
+        case RESISTANCE:
+            com->write("MEAS:RES");
+    }
     qt_sleep(1000);
+    //读取输出数值
     QByteArray data = com->readAll();
     QString str_data = data;
     double viResult = str_data.toDouble();
@@ -168,14 +174,6 @@ void frmInspectProject::get_instrument_value_RS232_34401A(int get_type, double* 
     qDebug() << data;
     qDebug() << str_data;
     qDebug() << viResult;
-#if 0
-    serial.WriteLine("MEAS:VOLT?");
-    Thread.Sleep(1000);
-    //读取万用表电压
-    float viResult = float.Parse(serial.ReadLine());
-    //保留三位小数
-    viResult = (float)Math.Round(viResult, 3);
-#endif
 }
 
 /**
@@ -336,6 +334,4 @@ void frmInspectProject::on_btn_inspect_mode_clicked()
 {
     /* 测试一下GPIB读写 */
     Set_DC_Current(&viSession, 3.3);
-
-
 }

@@ -117,10 +117,28 @@ typedef enum instrument_check_type
 /**
  * 设置标准源，set_type为直流电压，直流电流，交流电压，交流电流，电阻
  */
-void frmInspectProject::set_standard_source(int set_type, double set_val)
+void frmInspectProject::set_standard_source(int set_type, double set_val, int freq)
 {
-    set_type = set_type;
-    set_val = set_val;
+    switch(set_type)
+    {
+        case DIRECT_VOLT_TYPE:
+            Set_DC_Voltage(&viSession, set_val);
+            break;
+        case ALTERNATING_VOLT_TYPE:
+            Set_AC_Voltage(&viSession, set_val, freq);
+            break;
+        case DIRECT_CURRENT_TYPE:
+            Set_DC_Current(&viSession, set_val);
+            break;
+        case ALTERNATING_CURRENT_TYPE:
+            Set_AC_Current(&viSession, set_val, freq);
+            break;
+        case RESISTANCE:
+            Set_Resistance(&viSession, set_val);
+            break;
+        default:
+            break;
+    }
 }
 
 static void qt_sleep(int time_msecond)
@@ -164,6 +182,9 @@ void frmInspectProject::get_instrument_value_RS232_34401A(int get_type, double* 
             break;
         case RESISTANCE:
             com->write("MEAS:RES");
+            break;
+        default:
+            break;
     }
     qt_sleep(1000);
     //读取输出数值
@@ -179,15 +200,17 @@ void frmInspectProject::get_instrument_value_RS232_34401A(int get_type, double* 
 /**
  * 获取多用表输出值，set_type为直流电压，直流电流，交流电压，交流电流，电阻
  */
-void frmInspectProject::get_instrument_value(int get_type, double* p_get_val)
+void frmInspectProject::get_instrument_value(int instrument_type, int get_type, double* p_get_val)
 {
-    QByteArray bytes;
-    get_type = get_type;
-    *p_get_val = 10;
-
-    //bytes = com->readAll();
-
-    /* parse byte array*/
+    switch(instrument_type)
+    {
+        /* RS232_34401A */
+        case 0:
+            get_instrument_value_RS232_34401A(get_type, p_get_val);
+            break;
+        default:
+            break;
+    }
 }
 
 void frmInspectProject::on_comboBox_template_type_currentIndexChanged(const QString &arg1)
@@ -284,8 +307,8 @@ void frmInspectProject::on_btn_begin_inspect_clicked()
 
         for(int check_count = 0; check_count < CHECK_TIMES; check_count++)
         {
-            set_standard_source(0, standard_val);
-            get_instrument_value(0, &check_val[check_count]);
+            set_standard_source(0, standard_val, 0);
+            get_instrument_value(0, 0, &check_val[check_count]);
         }
 
         average_value               = average(check_val, CHECK_TIMES);

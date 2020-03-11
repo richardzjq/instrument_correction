@@ -9,6 +9,33 @@
 #include <QTime>
 #include <QDebug>
 
+
+typedef enum instrument_check_type
+{
+    MAX_FLUKE_DIRECT_VOLT = 2000,
+    MAX_FLUKE_ALTERNATING_VOLT = 2000,
+    MAX_FLUKE_DIRECT_CURRENT = 200,
+    MAX_FLUKE_ALTERNATING_CURRENT = 200,
+    MAX_FLUKE_RESISTANCE = 20000,
+    MAX_FLUKE_CAPACITANCE = 200000,
+
+    MAX_34401A_DIRECT_VOLT = 2000,
+    MAX_34401A_ALTERNATING_VOLT = 2000,
+    MAX_34401A_DIRECT_CURRENT = 200,
+    MAX_34401A_ALTERNATING_CURRENT = 200,
+    MAX_34401A_RESISTANCE = 20000,
+} check_type;
+
+typedef enum instrument_max_value
+{
+    DIRECT_VOLT_TYPE = 0,
+    ALTERNATING_VOLT_TYPE,
+    DIRECT_CURRENT_TYPE,
+    ALTERNATING_CURRENT_TYPE,
+    RESISTANCE_TYPE,
+    CAPACITANCE_TYPE,
+} max_value;
+
 frmInspectProject::frmInspectProject(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::frmInspectProject)
@@ -39,12 +66,20 @@ void frmInspectProject::initData(void)
     map_string_db.insert("resistance", dbInspect_template_resistance);
     map_string_db.insert("capacitance", dbInspect_template_capacitance);
 
+    map_tempate_type.insert("direct_current", DIRECT_CURRENT_TYPE);
+    map_tempate_type.insert("direct_voltage", DIRECT_VOLT_TYPE);
+    map_tempate_type.insert("alternating_current", ALTERNATING_CURRENT_TYPE);
+    map_tempate_type.insert("alternating_voltage", ALTERNATING_VOLT_TYPE);
+    map_tempate_type.insert("resistance", RESISTANCE_TYPE);
+    map_tempate_type.insert("capacitance", CAPACITANCE_TYPE);
+
     /* 打开串口 */
     isComOk = false;
 
     com = new QextSerialPort("com1", QextSerialPort::Polling);
     isComOk = com->open(QIODevice::ReadWrite);
     if (isComOk) {
+        qDebug() << "com1 opened success";
         com->setBaudRate(BAUD115200);
         com->setFlowControl(FLOW_OFF);
         com->setTimeout(10);
@@ -80,7 +115,7 @@ void frmInspectProject::initForm(void)
     ui->lineEdit_gpib_address->setText("0");
     gpib_address = "0";
 
-    ui->lineEdit_assist_parameter->setText("60HZ");
+    ui->lineEdit_assist_parameter->setText("60");
 
     ui->lineEdit_read_method->setText("被检表");    
 
@@ -95,24 +130,14 @@ void frmInspectProject::initForm(void)
     //自动调整宽度
     ui->tableWidget_inspect_result->horizontalHeader()->setStretchLastSection(true);
 
-    //ui->btn_inspect_mode->setEnabled(false);
-    //ui->btn_save->setEnabled(false);
+    ui->btn_inspect_mode->setEnabled(false);
+    ui->btn_save->setEnabled(false);
 }
 
 void frmInspectProject::uninitForm(void)
 {
 
 }
-
-typedef enum instrument_check_type
-{
-    DIRECT_VOLT_TYPE = 0,
-    ALTERNATING_VOLT_TYPE,
-    DIRECT_CURRENT_TYPE,
-    ALTERNATING_CURRENT_TYPE,
-    RESISTANCE,
-    CAPACITANCE,
-} check_type;
 
 /**
  * 设置标准源，set_type为直流电压，直流电流，交流电压，交流电流，电阻
@@ -122,18 +147,28 @@ void frmInspectProject::set_standard_source(int set_type, double set_val, int fr
     switch(set_type)
     {
         case DIRECT_VOLT_TYPE:
+            if(set_val > MAX_FLUKE_DIRECT_VOLT)
+                set_val = MAX_FLUKE_DIRECT_VOLT;
             Set_DC_Voltage(&viSession, set_val);
             break;
         case ALTERNATING_VOLT_TYPE:
+            if(set_val > MAX_FLUKE_ALTERNATING_VOLT)
+                set_val = MAX_FLUKE_ALTERNATING_VOLT;
             Set_AC_Voltage(&viSession, set_val, freq);
             break;
         case DIRECT_CURRENT_TYPE:
+            if(set_val > MAX_FLUKE_DIRECT_CURRENT)
+                set_val = MAX_FLUKE_DIRECT_CURRENT;
             Set_DC_Current(&viSession, set_val);
             break;
         case ALTERNATING_CURRENT_TYPE:
+            if(set_val > MAX_FLUKE_ALTERNATING_CURRENT)
+                set_val = MAX_FLUKE_ALTERNATING_CURRENT;
             Set_AC_Current(&viSession, set_val, freq);
             break;
-        case RESISTANCE:
+        case RESISTANCE_TYPE:
+            if(set_val > MAX_FLUKE_CAPACITANCE)
+                set_val = MAX_FLUKE_CAPACITANCE;
             Set_Resistance(&viSession, set_val);
             break;
         default:
@@ -180,7 +215,7 @@ void frmInspectProject::get_instrument_value_RS232_34401A(int get_type, double* 
         case ALTERNATING_CURRENT_TYPE:
             com->write("MEAS:CURR?");
             break;
-        case RESISTANCE:
+        case RESISTANCE_TYPE:
             com->write("MEAS:RES");
             break;
         default:
@@ -192,9 +227,9 @@ void frmInspectProject::get_instrument_value_RS232_34401A(int get_type, double* 
     QString str_data = data;
     double viResult = str_data.toDouble();
     *p_get_val = viResult;
-    qDebug() << data;
-    qDebug() << str_data;
-    qDebug() << viResult;
+    qDebug() << "data: " << data;
+    qDebug() << "str_data: " << str_data;
+    qDebug() << "viResult: " << viResult;
 }
 
 /**
@@ -269,15 +304,22 @@ void frmInspectProject::on_btn_begin_inspect_clicked()
 {
     /* 根据检定模板，按次序进行检定 */
 
+    /* 获取模板类型和辅助参数 */
+    QString str_freq = ui->lineEdit_assist_parameter->text();
+    int freq = str_freq.toInt();
+    qDebug() << "frequence: " << freq;
+
     /* 获得检定方案数据库文件中的table和数量 */
     QString  template_type = ui->comboBox_template_type->currentText();
     DBInspect dbInspect_template = map_string_db[template_type];
     QString template_name = ui->comboBox_template_name->currentText();
+    int int_template_type = map_tempate_type[template_type];
+    qDebug() << "template_type: " << template_type;
 
     /* 在inspect_data数据库中创建一个新table，名称是检定编号，保存检定数据 */
     QString columns = "range real, standard real, show real, error real";
     dbInspect_inspect_data_record.add_one_table(record_number, columns);
-    qDebug() << record_number;
+    qDebug() << "record_number: " << record_number;
 
     /* 查询一个表中的所有记录 */
     QStringList table_content;
@@ -307,8 +349,8 @@ void frmInspectProject::on_btn_begin_inspect_clicked()
 
         for(int check_count = 0; check_count < CHECK_TIMES; check_count++)
         {
-            set_standard_source(0, standard_val, 0);
-            get_instrument_value(0, 0, &check_val[check_count]);
+            set_standard_source(int_template_type, standard_val, freq);
+            get_instrument_value(0, int_template_type, &check_val[check_count]);
         }
 
         average_value               = average(check_val, CHECK_TIMES);
@@ -356,5 +398,5 @@ void frmInspectProject::on_btn_save_clicked()
 void frmInspectProject::on_btn_inspect_mode_clicked()
 {
     /* 测试一下GPIB读写 */
-    Set_DC_Current(&viSession, 3.3);
+    //Set_DC_Current(&viSession, 3.3);
 }

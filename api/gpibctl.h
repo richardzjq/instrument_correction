@@ -18,4 +18,5 @@ ViStatus Set_Resistance(ViPSession m_ViSession, double Resistance);
 //电容设置
 ViStatus Set_Capacitance(ViPSession m_ViSession, double Capacitance);
 
+
 #endif // GPIBCTL_H

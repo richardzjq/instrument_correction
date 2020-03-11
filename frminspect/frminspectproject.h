@@ -3,9 +3,18 @@
 #define FRMINSPECTPROJECT_H
 
 #include <QWidget>
+#include <QMap>
 #include "qextserialport.h"
 #include "gpibctl.h"
 #include "dbinspect.h"
+
+
+/* 每个点检测次数，最后求平均值 */
+#define CHECK_TIMES 10
+
+//自定义一个map类型，值为模板类型对应int型数据
+typedef QMap<QString, int> TemplateTypeMap;
+
 
 namespace Ui {
 class frmInspectProject;
@@ -27,6 +36,7 @@ public:
 private:
     Ui::frmInspectProject *ui;
     DBInspectMap map_string_db;
+    TemplateTypeMap map_tempate_type;
     QString gpib_address;
     QString record_number;
     bool isComOk = false;
@@ -52,7 +62,5 @@ private slots:
     void on_btn_inspect_mode_clicked();
 };
 
-/* 每个点检测次数，最后求平均值 */
-#define CHECK_TIMES 10
 
 #endif // FRMINSPECTPROJECT_H

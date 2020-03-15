@@ -32,6 +32,7 @@ private slots:
     void on_btn_delete_inspected_project_clicked();
     void on_btn_inspect_new_project_clicked();
     void on_treeWidget_inpsected_project_itemClicked(QTreeWidgetItem *item, int column);
+    void on_btn_print_clicked();
 };
 
 #endif // FRMINSPECTCHECK_H

@@ -6,35 +6,8 @@
 #include <QtGlobal>
 #include <cmath>
 #include <QApplication>
-#include <QTime>
 #include <QDebug>
 
-
-typedef enum instrument_check_type
-{
-    MAX_FLUKE_DIRECT_VOLT = 2000,
-    MAX_FLUKE_ALTERNATING_VOLT = 2000,
-    MAX_FLUKE_DIRECT_CURRENT = 200,
-    MAX_FLUKE_ALTERNATING_CURRENT = 200,
-    MAX_FLUKE_RESISTANCE = 20000,
-    MAX_FLUKE_CAPACITANCE = 200000,
-
-    MAX_34401A_DIRECT_VOLT = 2000,
-    MAX_34401A_ALTERNATING_VOLT = 2000,
-    MAX_34401A_DIRECT_CURRENT = 200,
-    MAX_34401A_ALTERNATING_CURRENT = 200,
-    MAX_34401A_RESISTANCE = 20000,
-} check_type;
-
-typedef enum instrument_max_value
-{
-    DIRECT_VOLT_TYPE = 0,
-    ALTERNATING_VOLT_TYPE,
-    DIRECT_CURRENT_TYPE,
-    ALTERNATING_CURRENT_TYPE,
-    RESISTANCE_TYPE,
-    CAPACITANCE_TYPE,
-} max_value;
 
 frmInspectProject::frmInspectProject(QWidget *parent) :
     QWidget(parent),
@@ -112,8 +85,8 @@ void frmInspectProject::initForm(void)
     strList << "";
     ui->comboBox_template_type->addItems(strList);
 
-    ui->lineEdit_gpib_address->setText("0");
-    gpib_address = "0";
+    ui->lineEdit_standard_source_gpib_address ->setText("4");
+    ui->label_instrument_gpib_address->setText("2");
 
     ui->lineEdit_assist_parameter->setText("60");
 
@@ -149,39 +122,31 @@ void frmInspectProject::set_standard_source(int set_type, double set_val, int fr
         case DIRECT_VOLT_TYPE:
             if(set_val > MAX_FLUKE_DIRECT_VOLT)
                 set_val = MAX_FLUKE_DIRECT_VOLT;
-            Set_DC_Voltage(&viSession, set_val);
+            Set_DC_Voltage_Fluke_5502A(&viSession_standard_source, set_val);
             break;
         case ALTERNATING_VOLT_TYPE:
             if(set_val > MAX_FLUKE_ALTERNATING_VOLT)
                 set_val = MAX_FLUKE_ALTERNATING_VOLT;
-            Set_AC_Voltage(&viSession, set_val, freq);
+            Set_AC_Voltage_Fluke_5502A(&viSession_standard_source, set_val, freq);
             break;
         case DIRECT_CURRENT_TYPE:
             if(set_val > MAX_FLUKE_DIRECT_CURRENT)
                 set_val = MAX_FLUKE_DIRECT_CURRENT;
-            Set_DC_Current(&viSession, set_val);
+            Set_DC_Current_Fluke_5502A(&viSession_standard_source, set_val);
             break;
         case ALTERNATING_CURRENT_TYPE:
             if(set_val > MAX_FLUKE_ALTERNATING_CURRENT)
                 set_val = MAX_FLUKE_ALTERNATING_CURRENT;
-            Set_AC_Current(&viSession, set_val, freq);
+            Set_AC_Current_Fluke_5502A(&viSession_standard_source, set_val, freq);
             break;
         case RESISTANCE_TYPE:
             if(set_val > MAX_FLUKE_CAPACITANCE)
                 set_val = MAX_FLUKE_CAPACITANCE;
-            Set_Resistance(&viSession, set_val);
+            Set_Resistance_Fluke_5502A(&viSession_standard_source, set_val);
             break;
         default:
             break;
     }
-}
-
-static void qt_sleep(int time_msecond)
-{
-    QTime t;
-    t.start();
-    while(t.elapsed() < time_msecond)
-        QCoreApplication::processEvents();
 }
 
 void frmInspectProject::get_instrument_value_RS232_34401A(int get_type, double* p_get_val)
@@ -239,9 +204,10 @@ void frmInspectProject::get_instrument_value(int instrument_type, int get_type, 
 {
     switch(instrument_type)
     {
-        /* RS232_34401A */
+        /* Agilent 34401A */
         case 0:
-            get_instrument_value_RS232_34401A(get_type, p_get_val);
+            //get_instrument_value_RS232_34401A(get_type, p_get_val);
+            get_instrument_value_gpib_34401A(&viSession_instrument, get_type, p_get_val);
             break;
         default:
             break;
@@ -378,16 +344,21 @@ void frmInspectProject::on_btn_gpib_connect_clicked()
     /* 发送命令，和fluke标准源建立GPIB连接 */
     /* 打开GPIB */
     ViStatus status;
+    QString str_standard_source = ui->lineEdit_standard_source_gpib_address->text();
+    QString str_instrument      = ui->lineEdit_instrument_gpib_address->text();
 
-    status = AutoConnectGPIB(&viSession);
+    status = AutoConnectGPIB_Fluke_5502A(&viSession_standard_source, str_standard_source);
+    status = AutoConnectGPIB_Agilent_34401A(&viSession_instrument, str_instrument);
 }
 
 void frmInspectProject::on_btn_gpib_disconnect_clicked()
 {
     /* 发送命令，和fluke标准源断开GPIB连接 */
     /* 关闭GPIB */
-    CloseConnectGPIB(&viSession);
-    viSession = 0;
+    CloseConnectGPIB(&viSession_standard_source);
+    CloseConnectGPIB(&viSession_instrument);
+    viSession_standard_source = 0;
+    viSession_instrument = 0;
 }
 
 void frmInspectProject::on_btn_save_clicked()

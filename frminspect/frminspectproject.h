@@ -37,11 +37,11 @@ private:
     Ui::frmInspectProject *ui;
     DBInspectMap map_string_db;
     TemplateTypeMap map_tempate_type;
-    QString gpib_address;
     QString record_number;
     bool isComOk = false;
     QextSerialPort *com = nullptr;
-    ViSession viSession;
+    ViSession viSession_standard_source;
+    ViSession viSession_instrument;
 
 private slots:
     void initData(void);

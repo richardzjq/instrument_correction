@@ -18,11 +18,6 @@ static ViSession viSession = 0;
 
 static void initData()
 {
-    /* 打开GPIB */
-    ViStatus status;
-
-    status = AutoConnectGPIB(&viSession);
-
     /* 打开串口 */
     isComOk = false;
     // timerRead = new QTimer();

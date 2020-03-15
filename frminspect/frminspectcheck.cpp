@@ -396,3 +396,8 @@ void frmInspectCheck::on_treeWidget_inpsected_project_itemClicked(QTreeWidgetIte
         row_inc++;
     }
 }
+
+void frmInspectCheck::on_btn_print_clicked()
+{
+    /*根据记录编号打印检查结果*/
+}

@@ -26,6 +26,8 @@ private slots:
     void uninitForm(void);
     void clearForm(void);
     void get_inspect_template_list(QStringList *p_stringList);
+    void print_certificate(void);
+    void print_check_result(void);
 
     void on_btn_create_clicked();
     void on_btn_save_clicked();

@@ -161,7 +161,6 @@ void frmInspectCheck::initForm(void)
     ui->tableWidget_inspect_result->horizontalHeader()->setStretchLastSection(true);
 
     ui->btn_cancel_modification->setEnabled(false);
-    ui->btn_print->setEnabled(false);
 }
 
 void frmInspectCheck::uninitForm(void)
@@ -397,7 +396,118 @@ void frmInspectCheck::on_treeWidget_inpsected_project_itemClicked(QTreeWidgetIte
     }
 }
 
+void frmInspectCheck::print_certificate()
+{
+    /* 打印证书 */
+    QString current_Date_Time = QDateTime::currentDateTime().toString("yyyyMMddhhmmss");
+    QString cert_number = ui->lineEdit_record_number->text();
+    QString fileName = tr("校准证书") + "_" + cert_number + "_" + current_Date_Time;
+    QString filePath = QCoreApplication::applicationDirPath() + "/doc/";
+    QDate Cur_Date= QDate::currentDate();
+    QString strCurDate = Cur_Date.toString("yyyy-MM-dd");
+
+    QDir dirReportPath(filePath);
+    if (!dirReportPath.exists())
+    {
+        if (dirReportPath.mkpath(filePath))
+        {
+            filePath += fileName + tr(".doc");
+        }
+    }
+    else
+    {
+        filePath += fileName + tr(".doc");
+    }
+
+    WordApi word;
+    if( !word.createNewWord(filePath) )
+    {
+        QString error = tr("Failed to export report,") + word.getStrErrorInfo();
+        qDebug() << error;
+        return;
+    }
+
+    /* 设置格式 */
+    word.setPageOrientation(0);			//页面方向
+    word.setWordPageView(3);			//页面视图
+    //word.setFontName(QString::fromLocal8Bit("宋体"));
+    word.setParagraphAlignment(0);		//下面文字位置
+    word.setFontSize(20);				//字体大小
+    word.setFontBold(true);				//字体加粗
+    word.insertText(tr("校准证书内页"));
+    word.setFontBold(false);
+    word.insertMoveDown();
+    word.setFontSize(10);
+
+    word.setParagraphAlignment(1);
+    word.insertText(tr("证书编号：   "));
+    word.insertText(cert_number);
+    word.insertMoveDown();
+
+    //first table
+    word.intsertTable(2, 1);
+    word.setFontSize(10);
+    //word.setColumnWidth(1,1,120);
+
+
+    word.setRowAlignment(1,1,1);
+    word.setCellString(1,1,1,tr("校准机构授权说明"));
+
+    word.setRowAlignment(1,2,1);
+    word.setCellString(1,2,1,tr("校准环境条件及地点："));
+
+    word.moveForEnd();
+    word.insertMoveDown();
+
+
+    //second table
+    word.intsertTable(2,4);
+
+    word.setRowAlignment(2,1,1);
+    word.setCellString(2,1,1,tr("温度"));
+    QString tempera = ui->lineEdit_temperature->text() + "  °C";
+    word.setCellString(2,1,2,tempera);
+    word.setCellString(2,1,3,tr("地点"));
+
+    word.setRowAlignment(2,2,1);
+    word.setCellString(2,2,1,tr("相对湿度"));
+    QString humidity = ui->lineEdit_humidity->text() + "  %";
+    word.setCellString(2,2,2,humidity);
+    word.setCellString(2,2,3,tr("其他"));
+
+    word.moveForEnd();
+    word.insertMoveDown();
+
+
+    word.setVisible(true);
+    word.saveAs();
+}
+
+void frmInspectCheck::print_check_result()
+{
+    /* 打印测试结果 */
+    QString current_Date_Time = QDateTime::currentDateTime().toString("yyyyMMddhhmmss");
+    QString cert_number = ui->lineEdit_record_number->text();
+    QString fileName = tr("测试结果") + "_" + cert_number + "_" + current_Date_Time;
+    QString filePath = QCoreApplication::applicationDirPath() + "/doc/";
+    QDate Cur_Date= QDate::currentDate();
+    QString strCurDate = Cur_Date.toString("yyyy-MM-dd");
+
+    QDir dirReportPath(filePath);
+    if (!dirReportPath.exists())
+    {
+        if (dirReportPath.mkpath(filePath))
+        {
+            filePath += fileName + tr(".doc");
+        }
+    }
+    else
+    {
+        filePath += fileName + tr(".doc");
+    }
+}
+
 void frmInspectCheck::on_btn_print_clicked()
 {
-    /*根据记录编号打印检查结果*/
+    print_certificate();
 }

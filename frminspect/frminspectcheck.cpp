@@ -445,10 +445,21 @@ void frmInspectCheck::print_certificate()
     word.insertMoveDown();
 
     //first table
-    word.intsertTable(2, 1);
+    word.intsertTable(8, 5);
     word.setFontSize(10);
     //word.setColumnWidth(1,1,120);
 
+    word.MergeCells(1, 1, 1, 1, 5);//合并第一行单元格
+    word.MergeCells(1, 2, 1, 2, 5);//合并第二行单元格
+    word.MergeCells(1, 3, 4, 3, 5);//合并第三行单元格
+    word.MergeCells(1, 4, 4, 4, 5);//合并第四行单元格
+    word.MergeCells(1, 5, 1, 5, 5);//合并第五行单元格
+    word.MergeCells(1, 6, 1, 6, 5);//合并第六行单元格
+
+    word.setRowHeight(1, 1, 120);
+    word.setRowHeight(1, 2, 240);
+
+    //word.setColumnHeight(1, 1, 240);
 
     word.setRowAlignment(1,1,1);
     word.setCellString(1,1,1,tr("校准机构授权说明"));
@@ -456,28 +467,33 @@ void frmInspectCheck::print_certificate()
     word.setRowAlignment(1,2,1);
     word.setCellString(1,2,1,tr("校准环境条件及地点："));
 
-    word.moveForEnd();
-    word.insertMoveDown();
-
-
-    //second table
-    word.intsertTable(2,4);
-
-    word.setRowAlignment(2,1,1);
-    word.setCellString(2,1,1,tr("温度"));
+    word.setRowAlignment(1,3,1);
+    word.setCellString(1,3,1,tr("温度"));
     QString tempera = ui->lineEdit_temperature->text() + "  °C";
-    word.setCellString(2,1,2,tempera);
-    word.setCellString(2,1,3,tr("地点"));
+    word.setCellString(1,3,2,tempera);
+    word.setCellString(1,3,3,tr("地点"));
 
-    word.setRowAlignment(2,2,1);
-    word.setCellString(2,2,1,tr("相对湿度"));
+    word.setRowAlignment(1,4,1);
+    word.setCellString(1,4,1,tr("相对湿度"));
     QString humidity = ui->lineEdit_humidity->text() + "  %";
-    word.setCellString(2,2,2,humidity);
-    word.setCellString(2,2,3,tr("其他"));
+    word.setCellString(1,4,2,humidity);
+    word.setCellString(1,4,3,tr("其他"));
+
+    word.setRowAlignment(1,5,1);
+    word.setCellString(1,5,1,tr("校准所依据的技术文件（代号、名称）:  "));
+
+    word.setRowAlignment(1,6,1);
+    word.setCellString(1,6,1,tr("校准所使用的主要测量标准：  "));
+
+    word.setRowAlignment(1,7,1);
+    word.setCellString(1,7,1,tr("名称"));
+    word.setCellString(1,7,2,tr("测量范围"));
+    word.setCellString(1,7,3,tr("最大允许误差"));
+    word.setCellString(1,7,4,tr("证书编号"));
+    word.setCellString(1,7,5,tr("证书有效期"));
 
     word.moveForEnd();
     word.insertMoveDown();
-
 
     word.setVisible(true);
     word.saveAs();

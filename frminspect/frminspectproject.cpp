@@ -46,17 +46,26 @@ void frmInspectProject::initData(void)
     map_tempate_type.insert("resistance", RESISTANCE_TYPE);
     map_tempate_type.insert("capacitance", CAPACITANCE_TYPE);
 
-    /* 打开串口 */
+    /* 打开串口，读取数据 */
     isComOk = false;
+    timerRead = new QTimer(this);
+    timerRead->setInterval(100);
+    connect(timerRead, SIGNAL(timeout()), this, SLOT(readDataCom()));
+
 
     com = new QextSerialPort("com1", QextSerialPort::Polling);
     isComOk = com->open(QIODevice::ReadWrite);
     if (isComOk) {
         qDebug() << "com1 opened success";
-        com->setBaudRate(BAUD115200);
+        com->setBaudRate(BAUD9600);
         com->setFlowControl(FLOW_OFF);
-        com->setTimeout(10);
+        com->setDtr(true);
+        com->setParity(PAR_NONE);
+        com->setDataBits(DATA_8);
+        com->setStopBits(STOP_1);
     }
+
+    timerRead->start();
 }
 
 void frmInspectProject::unInitData(void)
@@ -64,11 +73,14 @@ void frmInspectProject::unInitData(void)
     /* 关闭串口 */
     if(com)
     {
+        timerRead->stop();
         com->close();
         com->deleteLater();
         isComOk = false;
         delete com;
         com = nullptr;
+        delete timerRead;
+        timerRead = nullptr;
     }
 }
 
@@ -103,7 +115,7 @@ void frmInspectProject::initForm(void)
     //自动调整宽度
     ui->tableWidget_inspect_result->horizontalHeader()->setStretchLastSection(true);
 
-    ui->btn_inspect_mode->setEnabled(false);
+    //ui->btn_inspect_mode->setEnabled(false);
     ui->btn_save->setEnabled(false);
 }
 
@@ -149,32 +161,77 @@ void frmInspectProject::set_standard_source(int set_type, double set_val, int fr
     }
 }
 
+void frmInspectProject::send_data_RS232_34401A(QString str_send)
+{
+    QByteArray byte;
+    int i;
+    char acsii_send[MAX_DATA_LENGTH];
+
+    byte = str_send.toUtf8();
+    qDebug() << "send ACSII begin";
+    for(i = 0; i < str_send.size(); i++)
+    {
+       acsii_send[i] = int(byte.at(i));
+       qDebug() << acsii_send[i];
+    }
+    qDebug() << "send ACSII end";
+    com->write(acsii_send);
+}
+
+void frmInspectProject::recv_data_RS232_34401A(QString* p_str_recv)
+{
+    char recv_data[MAX_DATA_LENGTH];
+    qint64 recv_size;
+    int i;
+    QString str_data;
+
+    recv_size = com->read(recv_data, MAX_DATA_LENGTH);
+    qDebug() << "read_size: " << recv_size;
+    for(i = 0; i < recv_size; i++)
+    {
+       qDebug() << "sequence:  " << i << "data:  " << recv_data[i];
+    }
+
+    *p_str_recv =  QString::fromUtf8(recv_data);
+}
+
 void frmInspectProject::get_instrument_value_RS232_34401A(int get_type, double* p_get_val)
 {
+    QString str_recv;
+    double viResult;
+
     /* 设置串口 */
-    com->setBaudRate(BAUD9600);
-    com->setDataBits(DATA_8);
-    com->setParity(PAR_NONE);
-    com->setDtr(true);
-    com->setStopBits(STOP_1);
+    //com->setBaudRate(BAUD9600);
+    //com->setDataBits(DATA_8);
+    //com->setParity(PAR_NONE);
+    //com->setDtr(true);
+    //com->setStopBits(STOP_1);
     //com->setFlowControl(FLOW_OFF);
-    com->setTimeout(10);
+    //com->setTimeout(10);
 
     /* 发命令 */
-    com->write("SYST:REM");
-    qt_sleep(30);
-    //清除万用表显示板信息
-    com->write("*CLS");
-    qt_sleep(30);
-    com->write("TRIG:SOUR IMM");
-    qt_sleep(30);
+    //Remote mode
+    send_data_RS232_34401A(":SYST:REM");
+    qt_sleep(1000);
+
+    //Reset and clear errors
+    //send_data_RS232_34401A("*RST");
+    //qt_sleep(30);
+
+    send_data_RS232_34401A("*CLS");
+    qt_sleep(1000);
+
+    //send_data_RS232_34401A(":DISP:TEXT 'READY'");
+    //qt_sleep(30);
 
     /* 读取值 */
     switch(get_type)
     {
         case DIRECT_VOLT_TYPE:
+            send_data_RS232_34401A(":MEASURE:VOLTAGE:DC?");
+            break;
         case ALTERNATING_VOLT_TYPE:
-            com->write("MEAS:VOLT?");
+            send_data_RS232_34401A(":MEASURE:VOLTAGE:AC?");
             break;
         case DIRECT_CURRENT_TYPE:
         case ALTERNATING_CURRENT_TYPE:
@@ -187,13 +244,11 @@ void frmInspectProject::get_instrument_value_RS232_34401A(int get_type, double* 
             break;
     }
     qt_sleep(1000);
+
     //读取输出数值
-    QByteArray data = com->readAll();
-    QString str_data = data;
-    double viResult = str_data.toDouble();
+    recv_data_RS232_34401A(&str_recv);
+    viResult = str_recv.toDouble();
     *p_get_val = viResult;
-    qDebug() << "data: " << data;
-    qDebug() << "str_data: " << str_data;
     qDebug() << "viResult: " << viResult;
 }
 
@@ -370,4 +425,25 @@ void frmInspectProject::on_btn_inspect_mode_clicked()
 {
     /* 测试一下GPIB读写 */
     //Set_DC_Current(&viSession, 3.3);
+    //测试串口RS232读取电压值
+    double get_value;
+    get_instrument_value_RS232_34401A(0, &get_value);
 }
+
+void frmInspectProject::readDataCom()
+{
+#if 1
+    //qDebug() << __FUNCTION__;
+    if (com->bytesAvailable() > 0) {
+        m_buffer = com->readAll();
+    }
+    qint64 recv_size = com->bytesAvailable();
+    if(recv_size > 0)
+    qDebug() << "read_size: " << recv_size;
+    for(int i = 0; i < recv_size; i++)
+    {
+       qDebug() << "sequence:  " << i << "data:  " << m_buffer[i];
+    }
+#endif
+}
+

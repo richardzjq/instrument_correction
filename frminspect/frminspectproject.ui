@@ -206,7 +206,7 @@
     </font>
    </property>
    <property name="text">
-    <string>FLUKE   5500A    Calibrator</string>
+    <string>标准源  FLUKE   5500A    Calibrator</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit_standard_source">
@@ -229,11 +229,11 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="label_standard_source_2">
+  <widget class="QLabel" name="label_checked_instrument">
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>430</y>
+     <y>350</y>
      <width>391</width>
      <height>31</height>
     </rect>
@@ -339,6 +339,16 @@
    </property>
    <property name="text">
     <string>仪表GPIB地址</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox_checked_instrument_type">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>390</y>
+     <width>451</width>
+     <height>41</height>
+    </rect>
    </property>
   </widget>
  </widget>

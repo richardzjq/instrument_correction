@@ -14,8 +14,15 @@
 /* 每个点检测次数，最后求平均值 */
 #define CHECK_TIMES 10
 
+/* 最大仪表获取值函数数量 每个仪表提供6个函数，假定支持20个仪表类型 6*20= 120 */
+#define MAX_INSTRUMENTS_SUPPORT 20
+#define ONE_INSTRUMENT_FUNCS 6
+
 //自定义一个map类型，值为模板类型对应int型数据
 typedef QMap<QString, int> TemplateTypeMap;
+
+/* 定义RS232获取值得函数指针 */
+typedef void (*get_value_RS232_fun_ptr)(QSerialPort*, double, double*);
 
 
 namespace Ui {
@@ -42,6 +49,7 @@ private:
     QSerialPort m_serialPort;
     ViSession viSession_standard_source;
     ViSession viSession_instrument;
+    get_value_RS232_fun_ptr m_get_value_RS232_fun_ptr[MAX_INSTRUMENTS_SUPPORT * ONE_INSTRUMENT_FUNCS];
 
 private slots:
     void initData(void);
@@ -51,7 +59,7 @@ private slots:
     /* 设置标准源，set_type为直流电压，直流电流，交流电压，交流电流，电阻 */
     void set_standard_source(int set_type, double set_val, int freq);
     /* 获取多用表输出值，set_type为直流电压，直流电流，交流电压，交流电流，电阻*/
-    void get_instrument_value(int instrument_type, int get_type, double* p_get_val);
+    void get_instrument_value(int instrument_type, int get_type, double range_val, double* p_get_val);
     void readData();
     void on_comboBox_template_type_currentIndexChanged(const QString &arg1);
     void on_comboBox_template_name_currentIndexChanged(const QString &arg1);

@@ -67,7 +67,7 @@ ViStatus CloseConnectGPIB(ViPSession instrSesn)
 }
 
 //直流电流设置
-ViStatus Set_DC_Current_Fluke_5502A(ViPSession m_ViSession, double Current)
+ViStatus Set_DC_Current_GPIB_Fluke_5502A(ViPSession m_ViSession, double Current)
 {
     qDebug() << __FUNCTION__ << "Current: " << Current;
 
@@ -94,7 +94,7 @@ ViStatus Set_DC_Current_Fluke_5502A(ViPSession m_ViSession, double Current)
  } 
 
 //直流电压设置
-ViStatus Set_DC_Voltage_Fluke_5502A(ViPSession m_ViSession, double Voltage)
+ViStatus Set_DC_Voltage_GPIB_Fluke_5502A(ViPSession m_ViSession, double Voltage)
 {
     qDebug() << __FUNCTION__ << "Voltage: " << Voltage;
 
@@ -112,7 +112,7 @@ ViStatus Set_DC_Voltage_Fluke_5502A(ViPSession m_ViSession, double Voltage)
  } 
 
 //交流电流设置
-ViStatus Set_AC_Current_Fluke_5502A(ViPSession m_ViSession, double Current, int Frequency)
+ViStatus Set_AC_Current_GPIB_Fluke_5502A(ViPSession m_ViSession, double Current, int Frequency)
 {
     qDebug() << __FUNCTION__ << "current: " << Current << "frequency" << Frequency;
 
@@ -127,7 +127,7 @@ ViStatus Set_AC_Current_Fluke_5502A(ViPSession m_ViSession, double Current, int 
  } 
 
 //交流电压设置
-ViStatus Set_AC_Voltage_Fluke_5502A(ViPSession m_ViSession, double Voltage, int Frequency)
+ViStatus Set_AC_Voltage_GPIB_Fluke_5502A(ViPSession m_ViSession, double Voltage, int Frequency)
 {
     qDebug() << __FUNCTION__ << "Voltage: " << Voltage << "frequency" << Frequency;
 
@@ -143,7 +143,7 @@ ViStatus Set_AC_Voltage_Fluke_5502A(ViPSession m_ViSession, double Voltage, int 
  } 
 
 //电阻设置
-ViStatus Set_Resistance_Fluke_5502A(ViPSession m_ViSession, double Resistance)
+ViStatus Set_Resistance_GPIB_Fluke_5502A(ViPSession m_ViSession, double Resistance)
 {
     qDebug() << __FUNCTION__ << "Resistance: " << Resistance;
 
@@ -207,85 +207,6 @@ ViStatus AutoConnectGPIB_Agilent_34401A(ViPSession instrSesn, QString addr)
     //输出仪表信息,分别代表制造商、产品型号、产品序列号以及固件版本号
     qDebug() << "device infomation: " << receiveBufferArrary;
     *instrSesn = vi;
-
-    return VI_SUCCESS;
-}
-
-ViStatus get_instrument_value_gpib_34401A(ViPSession m_ViSession, int get_type, double* p_get_val)
-{
-    qDebug() << __FUNCTION__ << "get_type: " << get_type;
-
-    ViStatus status;
-
-    /* 发命令 */
-    status = viPrintf(*m_ViSession, "SYST:REM\n");
-    if (status < VI_SUCCESS)
-    {
-        qDebug() << "SYST:REM 失败";
-        return status;
-    }
-    qt_sleep(30);
-
-    //清除万用表显示板信息
-    status = viPrintf(*m_ViSession, "*CLS\n");
-    if (status < VI_SUCCESS)
-    {
-        qDebug() << "*CLS 失败";
-        return status;
-    }
-    qt_sleep(30);
-
-    status = viPrintf(*m_ViSession, "TRIG:SOUR IMM\n");
-    if (status < VI_SUCCESS)
-    {
-        qDebug() << "TRIG:SOUR IMM 失败";
-        return status;
-    }
-    qt_sleep(30);
-
-    /* 读取值 */
-    switch(get_type)
-    {
-        case DIRECT_VOLT_TYPE:
-        case ALTERNATING_VOLT_TYPE:
-            status = viPrintf(*m_ViSession, "MEAS:VOLT?\n");
-            if (status < VI_SUCCESS)
-            {
-                qDebug() << "MEAS:VOLT? 失败";
-                return status;
-            }
-            break;
-        case DIRECT_CURRENT_TYPE:
-        case ALTERNATING_CURRENT_TYPE:
-            status = viPrintf(*m_ViSession, "MEAS:CURR?\n");
-            if (status < VI_SUCCESS)
-            {
-                qDebug() << "MEAS:CURR? 失败";
-                return status;
-            }
-            break;
-        case RESISTANCE_TYPE:
-            status = viPrintf(*m_ViSession, "MEAS:RES?\n");
-            if (status < VI_SUCCESS)
-            {
-                qDebug() << "MEAS:RES? 失败";
-                return status;
-            }
-            break;
-        default:
-            break;
-    }
-    qt_sleep(1000);
-
-    //读取输出数值
-    char receiveBufferArrary[256] = {0};
-    viScanf(*m_ViSession, "%t", &receiveBufferArrary);
-    QString str_data = QString(QLatin1String(receiveBufferArrary));
-    double viResult = str_data.toDouble();
-    *p_get_val = viResult;
-    qDebug() << "receiveBufferArrary: " << receiveBufferArrary;
-    qDebug() << "str_data: " << str_data;
-    qDebug() << "viResult: " << viResult;
 
     return VI_SUCCESS;
 }

@@ -437,6 +437,7 @@ void frmInspectCheck::print_certificate()
     word.insertText(tr("校准证书内页"));
     word.setFontBold(false);
     word.insertMoveDown();
+    word.insertMoveDown();
     word.setFontSize(10);
 
     word.setParagraphAlignment(1);
@@ -496,6 +497,8 @@ void frmInspectCheck::print_certificate()
     //word.insertMoveDown();
 
     word.intsertTable(1, 2, 3);
+    word.setCellString(1,9,1,tr("nine line"));
+    word.setCellString(1,10,1,tr("ten line"));
 
     word.setVisible(true);
     word.saveAs();

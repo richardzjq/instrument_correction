@@ -465,7 +465,7 @@
      <rect>
       <x>580</x>
       <y>20</y>
-      <width>93</width>
+      <width>101</width>
       <height>40</height>
      </rect>
     </property>
@@ -476,7 +476,7 @@
      </sizepolicy>
     </property>
     <property name="text">
-     <string>打印记录</string>
+     <string>导出记录word</string>
     </property>
    </widget>
   </widget>

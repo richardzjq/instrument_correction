@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui sql xml network axcontainer
+QT       += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4){
 QT += widgets printsupport multimedia multimediawidgets designer

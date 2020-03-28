@@ -14,7 +14,9 @@ HEADERS += \
     $$PWD/savelog.h \
     $$PWD/soundapi.h \
     $$PWD/appevent.h \
-    $$PWD/freetreewidget.h
+    $$PWD/freetreewidget.h \
+    $$PWD/serialctl.h \
+    $$PWD/device_mix_definition.h
 
 SOURCES += \
     $$PWD/api.cpp \
@@ -32,4 +34,6 @@ SOURCES += \
     $$PWD/savelog.cpp \
     $$PWD/soundapi.cpp \
     $$PWD/appevent.cpp \
-    $$PWD/freetreewidget.cpp
+    $$PWD/freetreewidget.cpp \
+    $$PWD/serialctl.cpp \
+    $$PWD/device_mix_definition.cpp

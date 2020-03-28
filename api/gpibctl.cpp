@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QTime>
 #include "gpibctl.h"
+#include "device_mix_definition.h"
 
 
 ViStatus AutoConnectGPIB_Fluke_5502A(ViPSession instrSesn, QString addr)
@@ -208,14 +209,6 @@ ViStatus AutoConnectGPIB_Agilent_34401A(ViPSession instrSesn, QString addr)
     *instrSesn = vi;
 
     return VI_SUCCESS;
-}
-
-void qt_sleep(int time_msecond)
-{
-    QTime t;
-    t.start();
-    while(t.elapsed() < time_msecond)
-        QCoreApplication::processEvents();
 }
 
 ViStatus get_instrument_value_gpib_34401A(ViPSession m_ViSession, int get_type, double* p_get_val)

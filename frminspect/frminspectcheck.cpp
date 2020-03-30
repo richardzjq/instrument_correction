@@ -446,7 +446,7 @@ void frmInspectCheck::print_certificate()
     word.insertMoveDown();
 
     //first table
-    word.intsertTable(8, 5);
+    word.intsertTable(2, 1);
     word.setFontSize(10);
     //word.setColumnWidth(1,1,120);
 
@@ -460,13 +460,14 @@ void frmInspectCheck::print_certificate()
     //word.setRowHeight(1, 1, 120);
     //word.setRowHeight(1, 2, 240);
 
-    //word.setColumnHeight(1, 1, 240);
-
     //word.setRowAlignment(1,1,1);
     word.setCellString(1,1,1,tr("校准机构授权说明"));
 
     //word.setRowAlignment(1,2,1);
     word.setCellString(1,2,1,tr("校准环境条件及地点："));
+
+    word.moveForEnd();
+    word.intsertTable(1, 2, 4);
 
     //word.setRowAlignment(1,3,1);
     word.setCellString(1,3,1,tr("温度"));
@@ -480,11 +481,17 @@ void frmInspectCheck::print_certificate()
     word.setCellString(1,4,2,humidity);
     word.setCellString(1,4,3,tr("其他"));
 
+    word.moveForEnd();
+    word.intsertTable(1, 2, 1);
+
     //word.setRowAlignment(1,5,1);
     word.setCellString(1,5,1,tr("校准所依据的技术文件（代号、名称）:  "));
 
     //word.setRowAlignment(1,6,1);
     word.setCellString(1,6,1,tr("校准所使用的主要测量标准：  "));
+
+    word.moveForEnd();
+    word.intsertTable(1, 2, 5);
 
     //word.setRowAlignment(1,7,1);
     word.setCellString(1,7,1,tr("名称"));
@@ -494,11 +501,7 @@ void frmInspectCheck::print_certificate()
     word.setCellString(1,7,5,tr("证书有效期"));
 
     word.moveForEnd();
-    //word.insertMoveDown();
-
-    word.intsertTable(1, 2, 3);
-    word.setCellString(1,9,1,tr("nine line"));
-    word.setCellString(1,10,1,tr("ten line"));
+    word.insertMoveDown();
 
     word.setVisible(true);
     word.saveAs();

@@ -1,6 +1,9 @@
 ﻿#ifndef DEVICE_MIX_DEFINITION_H
 #define DEVICE_MIX_DEFINITION_H
 
+
+#define MAX_DATA_LENGTH 128
+
 typedef enum instrument_max_value
 {
     MAX_FLUKE_DIRECT_VOLT = 200,

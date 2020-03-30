@@ -4,9 +4,6 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 
-#define MAX_DATA_LENGTH 128
-
-
 /* 目前都按照trigger方式读取数值 */
 
 void get_idn_RS232(QSerialPort* p_serialPort, QString* p_str_recv);

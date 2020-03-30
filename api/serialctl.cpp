@@ -197,7 +197,7 @@ static void read_value_RS232_34401(QSerialPort* p_serialPort, double* p_get_val)
     double viResult;
 
     send_data_RS232(p_serialPort, "READ?\n"); 		 //写入读数指令
-    qt_sleep(100);
+    qt_sleep(200); //多等待一会儿！
 
     //读取输出数值
     recv_data_RS232(p_serialPort, &str_recv);
@@ -219,7 +219,7 @@ void get_dv_value_RS232_34401(QSerialPort* p_serialPort, double range, double* p
 
     send_data_RS232(p_serialPort, "CONF:VOLT:DC\n"); //设置直流电压测量模式
     qt_sleep(100);
-    send_data_RS232(p_serialPort, "VOLT:RANG:AUTO ON\n"); //设置直流电压测量电压范围自动
+    send_data_RS232(p_serialPort, "VOLT:RANG:AUTO ON\n"); //设置直流电压测量电压范围10  可以用“VOLT:RANG:AUTO ON”设置为自动量程
     qt_sleep(100);
     send_data_RS232(p_serialPort, "VOLT:RES 0.01\n"); //测量精度0.00001/10V
     qt_sleep(100);
@@ -242,15 +242,12 @@ void get_av_value_RS232_34401(QSerialPort* p_serialPort, double range, double* p
     send_data_RS232(p_serialPort, "*RST\n"); //复位
     qt_sleep(100);
 
-    send_data_RS232(p_serialPort, "*RST\n"); //复位
-    qt_sleep(100);
-
     send_data_RS232(p_serialPort, "SYST:REM\n"); //远程模式
     qt_sleep(100);
 
     send_data_RS232(p_serialPort, "CONF:VOLT:AC\n"); //设置交流电压测量模式
     qt_sleep(100);
-    send_data_RS232(p_serialPort, "VOLT:RANG:AUTO ON\n"); //设置交流电压测量电压范围自动
+    send_data_RS232(p_serialPort, "VOLT:RANG:AUTO ON\n"); //设置直流电压测量电压范围10  可以用“VOLT:RANG:AUTO ON”设置为自动量程
     qt_sleep(100);
     send_data_RS232(p_serialPort, "VOLT:RES 0.01\n"); //测量精度0.00001/10V
     qt_sleep(100);

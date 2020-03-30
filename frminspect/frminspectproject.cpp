@@ -239,7 +239,7 @@ void frmInspectProject::on_btn_begin_inspect_clicked()
 {
     /* 根据检定模板，按次序进行检定 */
 
-    /* 获得待鉴定仪表类型 */
+    /* 获得待鉴定仪表类型 0：2700， 1:34401，  */
     int instrument_type = ui->comboBox_checked_instrument_type->currentIndex();
     qDebug() << "instrument_type: " << instrument_type;
 
@@ -289,11 +289,12 @@ void frmInspectProject::on_btn_begin_inspect_clicked()
         for(int check_count = 0; check_count < CHECK_TIMES; check_count++)
         {
             //set_standard_source(int_template_type, standard_val, freq);
+            qt_sleep(1000);
             get_instrument_value(instrument_type, int_template_type, range_val, &check_val[check_count]);
+            qt_sleep(1000);
         }
 
         average_value               = average(check_val, CHECK_TIMES);
-        //average_value               = standard_val;
         standard_deviation_value    = standard_deviation(check_val, CHECK_TIMES);
         max_allowable_error         = 0.0000001;
         standard_uncertainty_value  = standard_uncertainty(max_allowable_error);
@@ -345,7 +346,7 @@ void frmInspectProject::on_btn_inspect_mode_clicked()
     //Set_DC_Current(&viSession, 3.3);
     //测试串口RS232读取电压值
     double get_value;
-    m_get_value_RS232_fun_ptr[0](&m_serialPort, 100, &get_value);
+    m_get_value_RS232_fun_ptr[7](&m_serialPort, 100, &get_value);
 }
 
 void frmInspectProject::readData()

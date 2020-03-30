@@ -22,5 +22,7 @@ ViStatus Set_Capacitance_GPIB_Fluke_5502A(ViPSession m_ViSession, double Capacit
 ViStatus AutoConnectGPIB_Agilent_34401A(ViPSession instrSesn, QString addr);
 
 /* 以后再实现GPIB读取2700，34401万用表的数值，过程，命令通RS232一样，只是通道不同 */
+/* 目前都按照trigger方式读取数值 */
+
 
 #endif // GPIBCTL_H

@@ -1,4 +1,5 @@
-﻿void on_btn_inspect_mode_clicked();
+﻿void on_btn_read_clicked();
+void on_btn_inspect_mode_clicked();
 #ifndef FRMINSPECTPROJECT_H
 #define FRMINSPECTPROJECT_H
 

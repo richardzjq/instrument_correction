@@ -12,12 +12,11 @@ static void recv_data_RS232(QSerialPort* p_serialPort, QString* p_str_recv)
 {
     char recv_data[MAX_DATA_LENGTH];
     qint64 recv_size;
-    int i;
     QString str_data;
 
     recv_size = p_serialPort->read(recv_data, MAX_DATA_LENGTH);
     qDebug() << "read_size: " << recv_size;
-    //for(i = 0; i < recv_size; i++)
+    //for(int i = 0; i < recv_size; i++)
     //{
     //   qDebug() << "sequence:  " << i << "data:  " << recv_data[i];
     //}
@@ -38,9 +37,10 @@ void get_idn_RS232(QSerialPort* p_serialPort, QString* p_str_recv)
     recv_data_RS232(p_serialPort, p_str_recv);
 }
 
-static void read_value_RS232_2700(QSerialPort* p_serialPort, double* p_get_val)
+static void read_value_RS232_2700(QSerialPort* p_serialPort, QString feature_sub_str, double* p_get_val)
 {
     QString str_recv;
+    int str_size, sub_str_pos;
     double viResult;
 
     send_data_RS232(p_serialPort, "TRIG:COUN 1\n"); //触发个数1，如果打开平均模式，触发个数大于1时，去所有触发的平均值，比如触发为5,2700自动测5次，然后输出平均值
@@ -51,6 +51,15 @@ static void read_value_RS232_2700(QSerialPort* p_serialPort, double* p_get_val)
 
     //读取输出数值
     recv_data_RS232(p_serialPort, &str_recv);
+
+    str_size = str_recv.size();
+    str_recv = str_recv.mid(1);
+    qDebug() << "Remove head: " << str_recv;
+
+    sub_str_pos = str_recv.indexOf(feature_sub_str);
+    str_recv = str_recv.mid(0, sub_str_pos);
+    qDebug() << "Remove tail: " << str_recv;
+
     viResult = str_recv.toDouble();
     *p_get_val = viResult;
     qDebug() << "viResult: " << viResult;
@@ -80,7 +89,7 @@ void get_dv_value_RS232_2700(QSerialPort* p_serialPort, double range, double* p_
     qt_sleep(1000);
 
     /* 读取值 */
-    read_value_RS232_2700(p_serialPort, p_get_val);
+    read_value_RS232_2700(p_serialPort, "VDC", p_get_val);
 }
 
 void get_av_value_RS232_2700(QSerialPort* p_serialPort, double range, double* p_get_val)
@@ -107,7 +116,7 @@ void get_av_value_RS232_2700(QSerialPort* p_serialPort, double range, double* p_
     qt_sleep(1000);
 
     /* 读取值 */
-    read_value_RS232_2700(p_serialPort, p_get_val);
+    read_value_RS232_2700(p_serialPort, "VAC", p_get_val);
 }
 
 void get_dc_value_RS232_2700(QSerialPort* p_serialPort, double range, double* p_get_val)
@@ -134,7 +143,7 @@ void get_dc_value_RS232_2700(QSerialPort* p_serialPort, double range, double* p_
     qt_sleep(1000);
 
     /* 读取值 */
-    read_value_RS232_2700(p_serialPort, p_get_val);
+    read_value_RS232_2700(p_serialPort, "ADC", p_get_val);
 }
 
 void get_ac_value_RS232_2700(QSerialPort* p_serialPort, double range, double* p_get_val)
@@ -161,7 +170,7 @@ void get_ac_value_RS232_2700(QSerialPort* p_serialPort, double range, double* p_
     qt_sleep(1000);
 
     /* 读取值 */
-    read_value_RS232_2700(p_serialPort, p_get_val);
+    read_value_RS232_2700(p_serialPort, "AAC", p_get_val);
 }
 
 void get_res_value_RS232_2700(QSerialPort* p_serialPort, double range, double* p_get_val)
@@ -188,19 +197,30 @@ void get_res_value_RS232_2700(QSerialPort* p_serialPort, double range, double* p
     qt_sleep(1000);
 
     /* 读取值 */
-    read_value_RS232_2700(p_serialPort, p_get_val);
+    read_value_RS232_2700(p_serialPort, ",+", p_get_val);
 }
 
 static void read_value_RS232_34401(QSerialPort* p_serialPort, double* p_get_val)
 {
     QString str_recv;
+    QString feature_sub_str = "\r\n";
+    int str_size, sub_str_pos;
     double viResult;
 
     send_data_RS232(p_serialPort, "READ?\n"); 		 //写入读数指令
-    qt_sleep(200); //多等待一会儿！
+    qt_sleep(1000); //多等待一会儿！
 
     //读取输出数值
     recv_data_RS232(p_serialPort, &str_recv);
+
+    str_size = str_recv.size();
+    str_recv = str_recv.mid(1);
+    qDebug() << "Remove head: " << str_recv;
+
+    sub_str_pos = str_recv.indexOf(feature_sub_str);
+    str_recv = str_recv.mid(0, sub_str_pos);
+    qDebug() << "Remove tail: " << str_recv;
+
     viResult = str_recv.toDouble();
     *p_get_val = viResult;
     qDebug() << "viResult: " << viResult;

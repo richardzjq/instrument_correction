@@ -476,7 +476,7 @@
      </sizepolicy>
     </property>
     <property name="text">
-     <string>导出记录word</string>
+     <string>导出word</string>
     </property>
    </widget>
   </widget>

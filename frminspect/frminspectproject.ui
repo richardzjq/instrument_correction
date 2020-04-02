@@ -128,7 +128,7 @@
      <x>570</x>
      <y>90</y>
      <width>71</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
@@ -196,24 +196,25 @@
     <rect>
      <x>570</x>
      <y>160</y>
-     <width>391</width>
+     <width>51</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>Adobe Devanagari</family>
+     <pointsize>9</pointsize>
     </font>
    </property>
    <property name="text">
-    <string>标准源  FLUKE   5500A    Calibrator</string>
+    <string>标准源 </string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit_standard_source">
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>220</y>
+     <y>260</y>
      <width>451</width>
      <height>91</height>
     </rect>
@@ -233,14 +234,15 @@
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>350</y>
-     <width>391</width>
+     <y>380</y>
+     <width>61</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>Adobe Devanagari</family>
+     <pointsize>9</pointsize>
     </font>
    </property>
    <property name="text">
@@ -345,8 +347,76 @@
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>390</y>
-     <width>451</width>
+     <y>430</y>
+     <width>201</width>
+     <height>41</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox_standard_source_type">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>200</y>
+     <width>211</width>
+     <height>41</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox_standard_source_type_communication_method">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>200</y>
+     <width>211</width>
+     <height>41</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_standard_source__communication_method">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>160</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Adobe Devanagari</family>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>标准源 通信方式</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_checked_instrument_communication_method">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>380</y>
+     <width>111</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Adobe Devanagari</family>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>被检表通信方式</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox_checked_instrument_communication_method">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>430</y>
+     <width>201</width>
      <height>41</height>
     </rect>
    </property>

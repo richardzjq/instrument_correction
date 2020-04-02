@@ -346,7 +346,7 @@ void frmInspectProject::on_btn_inspect_mode_clicked()
     //Set_DC_Current(&viSession, 3.3);
     //测试串口RS232读取电压值
     double get_value;
-    m_get_value_RS232_fun_ptr[7](&m_serialPort, 100, &get_value);
+    m_get_value_RS232_fun_ptr[10](&m_serialPort, 100, &get_value);
 }
 
 void frmInspectProject::readData()
@@ -363,4 +363,3 @@ void frmInspectProject::readData()
 
     buf.clear();
 }
-

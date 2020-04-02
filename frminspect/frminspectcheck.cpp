@@ -529,9 +529,73 @@ void frmInspectCheck::print_check_result()
     {
         filePath += fileName + tr(".doc");
     }
+
+    WordApi word;
+    if( !word.createNewWord(filePath) )
+    {
+        QString error = tr("Failed to export report,") + word.getStrErrorInfo();
+        qDebug() << error;
+        return;
+    }
+
+    /* 设置格式 */
+    word.setPageOrientation(0);			//页面方向
+    word.setWordPageView(3);			//页面视图
+    //word.setFontName(QString::fromLocal8Bit("宋体"));
+    word.setParagraphAlignment(0);		//下面文字位置
+    word.setFontSize(10);
+
+    word.setParagraphAlignment(1);
+    word.insertText(tr("证书编号：   "));
+    word.insertText(cert_number);
+    word.insertMoveDown();
+
+    word.insertText(tr("校准结果"));
+    word.insertMoveDown();
+    word.insertMoveDown();
+
+
+    //first table
+    word.insertText(tr("1.直流电压"));
+    word.insertMoveDown();
+
+    word.intsertTable(4, 4);
+
+    word.MergeCells(1, 2, 1, 4, 1);//合并第一列单元格
+
+    word.setCellString(1,1,1,tr("量程"));
+    word.setCellString(1,1,2,tr("标准值"));
+    word.setCellString(1,1,1,tr("显示值"));
+    word.setCellString(1,1,2,tr("测量不确定度"));
+
+    word.setCellString(1,2,1,tr("10V"));
+
+    //second table
+    word.insertText(tr("2.直流电流"));
+    word.insertMoveDown();
+
+    word.moveForEnd();
+    word.insertMoveDown();
+    word.intsertTable(4, 4);
+
+    word.MergeCells(2, 2, 1, 4, 1);//合并第一列单元格
+
+    word.setCellString(2,1,1,tr("量程"));
+    word.setCellString(2,1,2,tr("标准值"));
+    word.setCellString(2,1,1,tr("显示值"));
+    word.setCellString(2,1,2,tr("测量不确定度"));
+
+    word.setCellString(2,2,1,tr("10V"));
+
+    word.moveForEnd();
+    word.insertMoveDown();
+
+    word.setVisible(true);
+    word.saveAs();
 }
 
 void frmInspectCheck::on_btn_print_clicked()
 {
-    print_certificate();
+    //print_certificate();
+    print_check_result();
 }
